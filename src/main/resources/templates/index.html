@@ -1,0 +1,33 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>欢迎光临</title>
+    <meta http-equiv="Content-type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<div id="common_head">
+    <div>
+        <div>
+            <li class="fore1" id="loginbar" clstag="homepage|keycount|home2013|01b">
+                <p th:if="${session.user}"><span th:text="'欢迎'+${session.user.getUsername()}+'回来'"></span>
+                    <span id="head_span1">
+                        <a th:href="@{/toLogOut}">退出</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+                        <a th:href="@{/toRegisterPage}">注册</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+                        <a th:href="@{/toManagePage}">后台</a>
+                    </span>
+                </p>
+
+                <p th:unless="${session.user}">
+                <span id="head_span2">
+                    <a th:href="@{/toLoginPage}">登录</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+                    <a th:href="@{/toRegisterPage}">注册</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+                    <a th:href="@{/toManagePage}">后台</a>
+                </span>
+                </p>
+
+            </li>
+        </div>
+    </div>
+</div>
+</body>
+</html>
