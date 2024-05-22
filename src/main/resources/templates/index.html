@@ -3,6 +3,26 @@
 <head>
     <title>欢迎光临</title>
     <meta http-equiv="Content-type" content="text/html; charset=UTF-8" />
+    <script>
+        $(function() {
+
+            $("form").submit(function() {
+                var email = $("input[name='email']").val();
+                var password = $("input[name='password']").val();
+
+                $.post("/doLogin", {
+                    "email" : email,
+                    "password" : password
+                }, function(result) {
+                    $("#form_msg").html(result);
+                    $("#form_msg").css("color", "red");
+                    window.location.href="/index";
+                });
+
+                return false;
+            })
+        })
+    </script>
 </head>
 <body>
 <div id="common_head">
