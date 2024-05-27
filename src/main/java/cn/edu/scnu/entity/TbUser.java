@@ -15,12 +15,8 @@ public class TbUser implements Serializable {
     @TableId(type= IdType.AUTO)
     private Integer userId;
     private String username;
-    private String password;
-    private String nickname;
-    private String headPic;
-    private String sex;
-    private String phone;
-    private String email;
-    private int type;
+    private String pwd;
+    private int isVip;
+
 }
 

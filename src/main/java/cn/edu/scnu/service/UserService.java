@@ -24,7 +24,7 @@ public class UserService extends ServiceImpl<UserMapper, TbUser> {
 
     public TbUser login(String username, String password) {
         TbUser user = findUserByUsername(username);
-        if (user != null && user.getPassword().equals(MD5Util.md5(password))) {
+        if (user != null && user.getPwd().equals(MD5Util.md5(password))) {
             return user;
         }
         return null;

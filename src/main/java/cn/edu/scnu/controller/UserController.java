@@ -34,12 +34,13 @@ public class UserController {
         model.addAttribute("currentYear" , Calendar.getInstance().get(Calendar.YEAR));
         return "register";
     }
+
     @RequestMapping("/doLogin")
     @ResponseBody
     public String doLogin(String username, String password, HttpSession session) {
         TbUser user1 = userService.login(username, password);
         if (user1 != null) {
-            user1.setPassword(""); //去敏
+            user1.setPwd(""); //去敏
             session.setAttribute("user", user1);
             return "登录成功!";
         } else {
@@ -59,7 +60,7 @@ public class UserController {
         }
         TbUser user1 = new TbUser();
         user1.setUsername(username);
-        user1.setPassword(MD5Util.md5(password));
+        user1.setPwd(MD5Util.md5(password));
         userService.save(user1);
 
         return "注册成功!";

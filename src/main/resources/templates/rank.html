@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MovieMania</title>
+<!--    <link rel="stylesheet" href="/css/styles.css">-->
+</head>
+<body>
+    <header>
+        <h1>MovieMania</h1>
+    </header>
+    <main>
+        <section class="filters">
+            <div class="filter-group">
+                <h2>按类型</h2>
+                <button onclick="filterMovies('type', '')">全部</button>
+                <button onclick="filterMovies('type', '喜剧')">喜剧</button>
+                <button onclick="filterMovies('type', '爱情')">爱情</button>
+                <button onclick="filterMovies('type', '恐怖')">恐怖</button>
+                <button onclick="filterMovies('type', '科幻')">科幻</button>
+            </div>
+            <div class="filter-group">
+                <h2>按地区</h2>
+                <button onclick="filterMovies('region', '')">全部</button>
+                <button onclick="filterMovies('region', '大陆')">大陆</button>
+                <button onclick="filterMovies('region', '香港')">香港</button>
+                <button onclick="filterMovies('region', '台湾')">台湾</button>
+                <button onclick="filterMovies('region', '美国')">美国</button>
+            </div>
+        </section>
+        <section class="rankings">
+            <h2>排行榜</h2>
+            <button onclick="filterMovies('rank', 'all')">全部排行</button>
+            <button onclick="filterMovies('rank', 'hot')">热播排行</button>
+            <button onclick="filterMovies('rank', 'week')">本周排行</button>
+            <button onclick="filterMovies('rank', 'month')">本月排行</button>
+            <button onclick="filterMovies('rank', 'rating')">好评排行</button>
+        </section>
+        <section class="movie-list">
+            <h2>电影列表</h2>
+            <div class="movies">
+                <div class="movie" th:each="movie : ${movies}">
+                    <h3 th:text="${movie.name}">Movie Title</h3>
+                    <p th:text="'类型: ' + ${movie.type}">Genre</p>
+                    <p th:text="'地区: ' + ${movie.region}">Region</p>
+                    <p th:text="'评分: ' + ${movie.rating}">Rating</p>
+                </div>
+            </div>
+        </section>
+    </main>
+    <script>
+        function filterMovies(type, value) {
+            let url = new URL(window.location.href);
+            url.searchParams.set(type, value);
+            window.location.href = url.toString();
+        }
+    </script>
+</body>
+</html>
