@@ -20,7 +20,7 @@ public class RankController {
 
     @GetMapping("/rank")
     public String getMovies(Model model,
-                            @RequestParam(required = false) String type,
+                            @RequestParam(required = false) String genre,
                             @RequestParam(required = false) String region,
                             @RequestParam(required = false) String rank) {
         List<Movie> movies = rankService.list();  // 这里可以根据过滤条件和排行方式查询电影
