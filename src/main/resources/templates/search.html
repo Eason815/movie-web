@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Movie Search</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .movie {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .movie h2 {
+            margin: 0;
+            font-size: 1.5em;
+        }
+        .movie img {
+            max-width: 100px;
+            float: left;
+            margin-right: 10px;
+        }
+        .movie p {
+            margin: 0;
+        }
+        .clear {
+            clear: both;
+        }
+    </style>
+</head>
+<body>
+<h1>Search for Movies</h1>
+<form action="/search" method="get">
+    <input type="text" name="name" placeholder="请输入：张国荣" th:value="${name}">
+    <button type="submit">Search</button>
+</form>
+<h1>Search Results</h1>
+<div th:if="${movies.size() == 0}">
+    <p>No movies found.</p>
+</div>
+<div th:each="movie : ${movies}" class="movie">
+    <img th:src="@{${movie.image}}" th:alt="${movie.name}">
+    <h2 th:text="${movie.name}">Movie Name</h2>
+    <p th:text="'Genre: ' + ${movie.genre}">Genre</p>
+    <p th:text="'Region: ' + ${movie.region}">Region</p>
+    <p th:text="${movie.introduce}">Introduction</p>
+    <div class="clear"></div>
+</div>
+</body>
+</html>
