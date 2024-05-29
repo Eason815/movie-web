@@ -17,17 +17,15 @@ public class SearchController {
     @Autowired
     private MovieService movieService;
 
-//    @RequestMapping("/search")
-//    public String toSearchPage(){
-//        return "search";
-//    }
-
-    @GetMapping("/search")
-    public String index(@RequestParam(name = "name", required = false) String name, Model model) {
-        List<Movie> movies = movieService.findByName(name);
-        model.addAttribute("movies", movies);
-        model.addAttribute("name", name);
+    @RequestMapping("/search")
+    public String toSearchPage(){
         return "search";
+    }
+
+    @RequestMapping("/doSearch")
+    @ResponseBody
+    public List<Movie> search(String name){
+        return movieService.findByName(name);
     }
 
 
