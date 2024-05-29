@@ -10,7 +10,7 @@ import lombok.Data;
 public class Staff {
 
     @TableId(type= IdType.AUTO)
-    private int staffId;
+    private Long staffId;
     private String name;
-    private int isDirector;
+    private Boolean isDirector;
 }

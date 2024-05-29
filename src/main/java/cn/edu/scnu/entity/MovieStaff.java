@@ -8,10 +8,9 @@ import lombok.Data;
 @Data
 @TableName("movie_staff")
 public class MovieStaff {
-    public static final long serialVersionUID = -1L;
 
     @TableId(type= IdType.AUTO)
-    private int id;
-    private int movieId;
-    private int staffId;
+    private Long id;
+    private Long movieId;
+    private Long staffId;
 }

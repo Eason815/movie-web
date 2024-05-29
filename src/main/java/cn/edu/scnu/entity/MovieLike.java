@@ -1,14 +1,18 @@
 package cn.edu.scnu.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Data
 @TableName("movie_like")
 public class MovieLike {
-    private int likeId;
-    private Date likeTime;
-    private int movieId;
+
+    @TableId(type = IdType.AUTO)
+    private Long likeId;
+    private Long movieId;
+    private LocalDateTime likeTime;
 }

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Likes Chart</title>
+    <script src="js/echarts.min.js"></script>
+    <style>
+        #main {
+            margin:auto
+        }
+    </style>
+</head>
+<body>
+<div id="main" style="width: 1100px; height: 750px;"></div>
+<script>
+    var chartDom = document.getElementById('main');
+    var myChart = echarts.init(chartDom);
+    var option;
+
+    option = {
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'shadow'
+            }
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        xAxis: {
+            type: 'category',
+            data: [],
+            max:6
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [
+            {
+                data: [],
+                type: 'bar'
+            }
+        ]
+    };
+
+    option && myChart.setOption(option);
+
+
+    let movies = []
+
+    function fetchData() {
+        fetch('/rank')
+            .then(response => response.json())
+            .then(data => {
+                movies = data
+                updateChart();
+            });
+
+    }
+
+    function updateChart() {
+        movieNames = []
+        movieViews = []
+        for(let i = 0; i < movies.length; i ++ ){
+            movieNames.push(movies[i].name.split(" ")[0])
+            movieViews.push(movies[i].view)
+        }
+        option.xAxis.data = movieNames
+        option.series[0].data = movieViews;
+        myChart.setOption(option);
+    }
+
+    fetchData();
+</script>
+</body>
+</html>

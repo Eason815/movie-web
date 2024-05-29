@@ -17,4 +17,5 @@ public class Movie {
     private String introduce;
     private boolean needVip;
     private String image;
+    private int view;
 }

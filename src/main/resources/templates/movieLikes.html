@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Likes Chart</title>
+    <script src="js/echarts.min.js"></script>
+    <style>
+        #main {
+            margin:auto
+        }
+    </style>
+</head>
+<body>
+
+<div id="main" style="width: 1200px; height: 800px;"></div>
+
+<script>
+    var chartDom = document.getElementById('main');
+    var myChart = echarts.init(chartDom);
+    var option;
+
+    option = {
+        xAxis: {
+            max: 'dataMax'
+        },
+        yAxis: {
+            type: 'category',
+            data: [],
+            inverse: true,
+            animationDuration: 100,
+            animationDurationUpdate: 100,
+            max: 10
+        },
+        series: [
+            {
+                realtimeSort: true,
+                name: '好评',
+                type: 'bar',
+                data: [],
+                label: {
+                    show: true,
+                    position: 'right',
+                    valueAnimation: true
+                }
+            }
+        ],
+        legend: {
+            show: true
+        },
+        animationDuration: 0,
+        animationDurationUpdate: 3000,
+        animationEasing: 'linear',
+        animationEasingUpdate: 'linear',
+        graphic: {
+            elements: [
+                {
+                    type: 'text',
+                    right: 160,
+                    bottom: 60,
+                    style: {
+                        text: "2024:06.00",
+                        font: 'bolder 60px monospace',
+                        fill: 'rgba(100, 100, 100, 0.25)'
+                    },
+                    z: 100
+                }
+            ]
+        }
+    };
+
+    let allLikes = [];
+    let currentIndex = 0;
+
+    function fetchData() {
+        fetch('/movieLikes')
+            .then(response => response.json())
+            .then(data => {
+                allLikes = data.filter(like => new Date(like.likeTime) >= new Date('2024-06-01') && new Date(like.likeTime) <= new Date('2024-07-01'))
+                    .sort((a, b) => new Date(a.likeTime) - new Date(b.likeTime));
+
+                updateChart();
+            });
+    }
+
+    let movieLikes = {};
+    let movieNames = {};
+
+    function updateChart() {
+        const like = allLikes[currentIndex];
+
+        option.graphic.elements[0].style.text = like.likeTime;
+
+        if (movieLikes[like.movieId]) {
+            movieLikes[like.movieId]++;
+        } else {
+            movieLikes[like.movieId] = 1;
+
+            fetch('/getMovieById?id=' + like.movieId)
+                .then(response => response.json())
+                .then(data => {
+                    name = data.name;
+                });
+
+            movieNames[like.movieId] = name.split(" ")[0];
+        }
+
+        const sortedLikes = Object.entries(movieLikes).sort((a, b) => b[1] - a[1]).slice(0, 10);
+        const sortedNames = sortedLikes.map(item => movieNames[item[0]]);
+        const sortedData = sortedLikes.map(item => item[1]);
+
+        option.yAxis.data = sortedNames;
+        option.series[0].data = sortedData;
+        myChart.setOption(option);
+
+        if (currentIndex < allLikes.length - 1) {
+            currentIndex++;
+            setTimeout(updateChart, 30);
+        }
+    }
+
+    fetchData();
+</script>
+</body>
+</html>

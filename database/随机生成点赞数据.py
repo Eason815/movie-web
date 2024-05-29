@@ -5,7 +5,7 @@ from lxml import etree
 import re
 import random
 
-conn = pymysql.connect(host="localhost", port=3306, user="root", password="qaz781212", database="moviedb")
+conn = pymysql.connect(host="localhost", port=3306, user="root", password="123456", database="moviedb")
 
 def generate_random_datetime():
     year = 2024

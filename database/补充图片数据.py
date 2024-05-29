@@ -6,7 +6,7 @@ import re
 import random
 
 # 第一页0 第二页25 ... 225
-conn = pymysql.connect(host="localhost", port=3306, user="root", password="qaz781212", database="moviedb")
+conn = pymysql.connect(host="localhost", port=3306, user="root", password="123456", database="moviedb")
 furl = "https://movie.douban.com/top250?start=%d"
 
 with conn.cursor() as cursor:

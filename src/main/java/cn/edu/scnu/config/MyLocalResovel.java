@@ -1,6 +1,5 @@
 package cn.edu.scnu.config;
 
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
@@ -20,26 +19,32 @@ public class MyLocalResovel implements LocaleResolver {
         String l = httpServletRequest.getParameter("l");
         // 获取请求头自动传递的语言参数Accept-Language
         String header = httpServletRequest.getHeader("Accept-Language");
-        Locale locale=null;
-        // 如果手动切换参数不为空，就根据手动参数进行语言切换，否则默认根据请求头信息切换
-        if(!StringUtils.isEmpty(l)){
+        Locale locale = null;
+
+        // 如果手动切换参数不为空，就根据手动参数进行语言切换
+        if (!StringUtils.isEmpty(l)) {
             String[] split = l.split("_");
-            locale=new Locale(split[0],split[1]);
-        }else {
+            locale = new Locale(split[0], split[1]);
+        } else if (header != null && !header.isEmpty()) {
             // Accept-Language: en-US,en;q=0.9,zh-CN;q=0.8,zh;q=0.7
             String[] splits = header.split(",");
             String[] split = splits[0].split("-");
-            locale=new Locale(split[0],split[1]);
+            locale = new Locale(split[0], split[1]);
+        } else {
+            // 设置默认语言
+            locale = Locale.getDefault();
         }
         return locale;
     }
+
     @Override
-    public void setLocale(HttpServletRequest httpServletRequest, @Nullable
-    HttpServletResponse httpServletResponse, @Nullable Locale locale) {
+    public void setLocale(HttpServletRequest httpServletRequest, @Nullable HttpServletResponse httpServletResponse, @Nullable Locale locale) {
+        // 空方法，可以根据需要实现
     }
+
     // 将自定义的MyLocalResovel类重新注册为一个类型LocaleResolver的Bean组件
     @Bean
-    public LocaleResolver localeResolver(){
+    public LocaleResolver localeResolver() {
         return new MyLocalResovel();
     }
 }
