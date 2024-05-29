@@ -1,60 +1,100 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MovieMania</title>
-<!--    <link rel="stylesheet" href="/css/styles.css">-->
+    <title>Movie Search and Ranking</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .filter, .sort {
+            margin-bottom: 20px;
+        }
+        .filter button, .sort button {
+            margin-right: 10px;
+        }
+        .movie {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            height: 200px;
+        }
+        .movie h2 {
+            margin: 0;
+            font-size: 1.5em;
+        }
+        .movie img {
+            max-width: 100px;
+            float: left;
+            margin-right: 10px;
+        }
+        .movie p {
+            margin: 0;
+        }
+        .clear {
+            clear: both;
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <h1>MovieMania</h1>
-    </header>
-    <main>
-        <section class="filters">
-            <div class="filter-group">
-                <h2>按类型</h2>
-                <button onclick="filterMovies('genre', '')">全部</button>
-                <button onclick="filterMovies('genre', '喜剧')">喜剧</button>
-                <button onclick="filterMovies('genre', '爱情')">爱情</button>
-                <button onclick="filterMovies('genre', '恐怖')">恐怖</button>
-                <button onclick="filterMovies('genre', '科幻')">科幻</button>
-            </div>
-            <div class="filter-group">
-                <h2>按地区</h2>
-                <button onclick="filterMovies('region', '')">全部</button>
-                <button onclick="filterMovies('region', '大陆')">大陆</button>
-                <button onclick="filterMovies('region', '香港')">香港</button>
-                <button onclick="filterMovies('region', '台湾')">台湾</button>
-                <button onclick="filterMovies('region', '美国')">美国</button>
-            </div>
-        </section>
-        <section class="rankings">
-            <h2>排行榜</h2>
-            <button onclick="filterMovies('rank', 'all')">全部排行</button>
-            <button onclick="filterMovies('rank', 'hot')">热播排行</button>
-            <button onclick="filterMovies('rank', 'week')">本周排行</button>
-            <button onclick="filterMovies('rank', 'month')">本月排行</button>
-            <button onclick="filterMovies('rank', 'rating')">好评排行</button>
-        </section>
-        <section class="movie-list">
-            <h2>电影列表</h2>
-            <div class="movies">
-                <div class="movie" th:each="movie : ${movies}">
-                    <h3 th:text="${movie.name}">Movie Title</h3>
-                    <p th:text="'类型: ' + ${movie.genre}">Genre</p>
-                    <p th:text="'地区: ' + ${movie.region}">Region</p>
-                    <p th:text="'评分: ' + ${movie.rating}">Rating</p>
-                </div>
-            </div>
-        </section>
-    </main>
-    <script>
-        function filterMovies(type, value) {
-            let url = new URL(window.location.href);
-            url.searchParams.set(type, value);
-            window.location.href = url.toString();
-        }
-    </script>
+<h1>Search and Rank Movies</h1>
+
+<div class="filter">
+    <h2>按类型</h2>
+    <form method="post" th:action="@{/rank}">
+        <input type="hidden" name="region" th:value="${region}">
+        <input type="hidden" name="sort" th:value="${sort}">
+        <button type="submit" name="type" value="">All</button>
+        <button type="submit" name="type" value="喜剧">喜剧</button>
+        <button type="submit" name="type" value="爱情">爱情</button>
+        <button type="submit" name="type" value="冒险">冒险</button>
+        <button type="submit" name="type" value="动画">动画</button>
+        <button type="submit" name="type" value="科幻">科幻</button>
+    </form>
+</div>
+
+<div class="filter">
+    <h2>按地区</h2>
+    <form method="post" th:action="@{/rank}">
+        <input type="hidden" name="type" th:value="${type}">
+        <input type="hidden" name="sort" th:value="${sort}">
+        <button type="submit" name="region" value="">All</button>
+        <button type="submit" name="region" value="大陆">大陆</button>
+        <button type="submit" name="region" value="香港">香港</button>
+        <button type="submit" name="region" value="台湾">台湾</button>
+        <button type="submit" name="region" value="美国">美国</button>
+        <button type="submit" name="region" value="法国">法国</button>
+        <button type="submit" name="region" value="英国">英国</button>
+        <button type="submit" name="region" value="日本">日本</button>
+    </form>
+</div>
+
+<div class="sort">
+    <h2>排行</h2>
+    <form method="post" th:action="@{/rank}">
+        <input type="hidden" name="type" th:value="${type}">
+        <input type="hidden" name="region" th:value="${region}">
+        <button type="submit" name="sort" value="">全部排行</button>
+        <button type="submit" name="sort" value="hot">Hot Ranking</button>
+        <button type="submit" name="sort" value="weekly">Weekly Ranking</button>
+        <button type="submit" name="sort" value="monthly">Monthly Ranking</button>
+        <button type="submit" name="sort" value="best">Best Rated</button>
+    </form>
+</div>
+
+<h1>结果</h1>
+<div th:if="${movies != null}">
+    <div th:if="${movies.size() == 0}">
+        <p>No movies found.</p>
+    </div>
+    <div th:each="movie : ${movies}" class="movie">
+        <img th:src="@{'image/' + ${movie.image}}" th:alt="${movie.name}">
+        <h2 th:text="${movie.name}">Movie Name</h2>
+        <p th:text="'Genre: ' + ${movie.genre}">Genre</p>
+        <p th:text="'Region: ' + ${movie.region}">Region</p>
+        <p th:text="${movie.introduce}">Introduction</p>
+        <div class="clear"></div>
+    </div>
+</div>
 </body>
 </html>

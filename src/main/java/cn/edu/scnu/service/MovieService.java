@@ -52,4 +52,35 @@ public class MovieService extends ServiceImpl<MovieMapper,Movie> {
         return movieMapper.selectList(movieQueryWrapper);
     }
 
+    public List<Movie> searchMovies(String type, String region) {
+        QueryWrapper<Movie> queryWrapper = new QueryWrapper<>();
+        if (type != null && !type.isEmpty()) queryWrapper.like("genre", type);
+        if (region != null && !region.isEmpty()) queryWrapper.like("region", region);
+        return list(queryWrapper);
+    }
+
+    public List<Movie> getHotRankedMovies() {
+        QueryWrapper<Movie> queryWrapper = new QueryWrapper<>();
+        queryWrapper.orderByDesc("like_count");
+        return list(queryWrapper);
+    }
+
+    public List<Movie> getWeeklyRankedMovies() {
+        QueryWrapper<Movie> queryWrapper = new QueryWrapper<>();
+        queryWrapper.orderByDesc("weekly_like_count");
+        return list(queryWrapper);
+    }
+
+    public List<Movie> getMonthlyRankedMovies() {
+        QueryWrapper<Movie> queryWrapper = new QueryWrapper<>();
+        queryWrapper.orderByDesc("monthly_like_count");
+        return list(queryWrapper);
+    }
+
+    public List<Movie> getBestRatedRankedMovies() {
+        QueryWrapper<Movie> queryWrapper = new QueryWrapper<>();
+        queryWrapper.orderByDesc("total_like_count");
+        return list(queryWrapper);
+    }
+
 }

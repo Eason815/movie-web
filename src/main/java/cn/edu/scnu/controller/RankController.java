@@ -1,13 +1,11 @@
 package cn.edu.scnu.controller;
 
 import cn.edu.scnu.entity.Movie;
-import cn.edu.scnu.service.RankService;
+import cn.edu.scnu.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -16,15 +14,39 @@ import java.util.List;
 public class RankController {
 
     @Autowired
-    private RankService rankService;
+    private MovieService movieService;
 
-    @GetMapping("/rank")
-    public String getMovies(Model model,
-                            @RequestParam(required = false) String genre,
-                            @RequestParam(required = false) String region,
-                            @RequestParam(required = false) String rank) {
-        List<Movie> movies = rankService.list();  // 这里可以根据过滤条件和排行方式查询电影
+//    @RequestMapping("/rank")
+//    public String toRankPage() {
+//        return "rank";
+//    }
+
+
+    @RequestMapping("/rank")
+
+    public String index(Model model,
+                        @RequestParam(value = "type", required = false) String type,
+                        @RequestParam(value = "region", required = false) String region,
+                        @RequestParam(value = "sort", required = false) String sort) {
+
+        List<Movie> movies;
+
+        if ("hot".equals(sort))
+            movies = movieService.getHotRankedMovies();
+        else if ("weekly".equals(sort))
+             movies = movieService.getWeeklyRankedMovies();
+        else if ("monthly".equals(sort))
+            movies = movieService.getMonthlyRankedMovies();
+        else if ("best".equals(sort))
+            movies = movieService.getBestRatedRankedMovies();
+        else
+            movies = movieService.searchMovies(type, region);
+
+
         model.addAttribute("movies", movies);
+        model.addAttribute("type", type);
+        model.addAttribute("region", region);
+        model.addAttribute("sort", sort);
         return "rank";
     }
 }
