@@ -54,4 +54,14 @@ public interface MovieMapper extends BaseMapper<Movie> {
             "JOIN staff s ON s.staff_id = ms.staff_id " +
             "WHERE s.is_director = 1 AND s.name = #{directorName}")
     List<Movie> selectMoviesByDirectorName(String directorName);
+
+    @Select(("select s.name\n" +
+            "\tfrom movie m, movie_staff ms, staff s\n" +
+            "\twhere m.movie_id = ms.movie_id and s.staff_id  = ms.staff_id and s.is_director = 0 and m.movie_id = #{id}"))
+    List<String> selectActorsByMoiveId(Integer id);
+
+    @Select(("select s.name\n" +
+            "\tfrom movie m, movie_staff ms, staff s\n" +
+            "\twhere m.movie_id = ms.movie_id and s.staff_id  = ms.staff_id and s.is_director = 1 and m.movie_id = #{id}"))
+    String selectDirectorByMoiveId(Integer id);
 }

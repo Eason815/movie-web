@@ -83,4 +83,16 @@ public class MovieController {
     public Movie getMovieById(Integer id) {
         return movieService.GetMovieById(id);
     }
+
+    @ResponseBody
+    @GetMapping("/getActorsByMovieId")
+    public List<String> getActorsByMovieId(Integer id) {
+        return movieService.getActorsByMovieId(id);
+    }
+
+    @ResponseBody
+    @GetMapping("/getDirectorByMovieId")
+    public String getDirectorByMovieId(Integer id) {
+        return movieService.getDirectorByMovieId(id);
+    }
 }

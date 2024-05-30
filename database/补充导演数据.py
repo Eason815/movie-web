@@ -30,8 +30,6 @@ with conn.cursor() as cursor:
         #详情页
         for url in urls:
             movie_id += 1
-            if movie_id < 8:
-                continue
             if movie_id not in movie_ids:
                 continue
 
@@ -41,7 +39,7 @@ with conn.cursor() as cursor:
             tree = etree.HTML(resp.text)
             director = tree.xpath('//span[@class="attrs"]/a[@rel="v:directedBy"]/text()')[0]
 
-            query = "select staff_id from staff where name = %s"
+            query = "select staff_id from staff where name = %s and is_director = 1"
             cursor.execute(query, director)
 
             #不存在这个staff，先创建
@@ -49,7 +47,7 @@ with conn.cursor() as cursor:
                 sql = "insert into staff(name, is_director) values(%s, %s)"
                 cursor.execute(sql, (director, "1"))
                 conn.commit()
-            query = "select staff_id from staff where name = %s"
+            query = "select staff_id from staff where name = %s and is_director = 1"
             cursor.execute(query, director)
             staff_id = cursor.fetchone()[0]
 

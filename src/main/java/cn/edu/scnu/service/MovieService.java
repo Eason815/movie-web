@@ -54,4 +54,12 @@ public class MovieService extends ServiceImpl<MovieMapper, Movie> {
         return movieMapper.selectMoviesByDirectorName(directorName);
     }
 
+    public List<String> getActorsByMovieId(Integer id) {
+        return movieMapper.selectActorsByMoiveId(id);
+    }
+
+    public String getDirectorByMovieId(Integer id) {
+        return movieMapper.selectDirectorByMoiveId(id);
+    }
+
 }
