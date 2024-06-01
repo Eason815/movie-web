@@ -4,6 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MovieMania</title>
+    <style>
+        .movie-list {
+            display: flex; /* 添加这行 */
+            flex-wrap: wrap; /* 添加这行，使电影项在需要时换行 */
+            justify-content: space-around; /* 添加这行，使电影项在行中均匀分布 */
+            margin: 20px 200px; /* 修改这行，使电影列表在上下都有边距 */
+        }
+        .movie {
+            position: relative;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px; /* 修改这行，使电影项在四周都有边距 */
+            width: calc(16% - 20px); /* 修改这行，使电影项的宽度为容器宽度的三分之一，减去边距 */
+            float: none; /* 修改这行 */
+        }
+        .movie img {
+            height: 150px;
+            margin-right: 10px;
+        }
+        .movie h2 {
+            margin: 0;
+            font-size: 1.5em;
+        }
+        .movie p {
+            margin-top: 5px;
+        }
+
+
+    </style>
 <!--    <link rel="stylesheet" href="/css/styles.css">-->
 </head>
 <body>
@@ -37,15 +67,17 @@
             <button onclick="filterMovies('rank', 'month')">本月排行</button>
             <button onclick="filterMovies('rank', 'rating')">好评排行</button>
         </section>
+        <h2>电影列表</h2>
+
+
         <section class="movie-list">
-            <h2>电影列表</h2>
-            <div class="movies">
-                <div class="movie" th:each="movie : ${movies}">
-                    <h3 th:text="${movie.name}">Movie Title</h3>
-                    <p th:text="'类型: ' + ${movie.genre}">Genre</p>
-                    <p th:text="'地区: ' + ${movie.region}">Region</p>
-                    <p th:text="'播放量: ' + ${movie.view}">Rating</p>
-                </div>
+
+            <div th:each="movie : ${movies}" class="movie" th:onclick="'location.href=\'/movieView?movieId=' + ${movie.movieId} + '\';'">
+                <img th:src="'/image/' + ${movie.image}" th:alt="${movie.name}">
+                <h2 th:text="${movie.name}">Movie Name</h2>
+                <p th:text="'类型: ' + ${movie.genre}">Genre</p>
+                <p th:text="'地区: ' + ${movie.region}">Region</p>
+                <div class="clear"></div>
             </div>
         </section>
     </main>

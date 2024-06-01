@@ -29,6 +29,7 @@ public class MovieController {
         List<Movie> movies = movieService.getMoviesByCriteria(genre, region);
         if (rank != null) {
             switch (rank) {
+                case "hot" -> movies = movieService.getMoviesByViews();
                 case "rating" -> movies = movieService.getMoviesByLikes();
                 case "week" -> movies = movieService.getMoviesByWeekLikes();
                 case "month" -> movies = movieService.getMoviesByMonthlyLikes();

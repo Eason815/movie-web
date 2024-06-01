@@ -62,4 +62,19 @@ public class MovieService extends ServiceImpl<MovieMapper, Movie> {
         return movieMapper.selectDirectorByMoiveId(id);
     }
 
+    public List<Movie> getMoviesByActorNameWithPagination(String name, Integer pageNo, Integer pageSize) {
+        int start = (pageNo - 1) * pageSize;
+        return movieMapper.selectMoviesByActorNameWithPagination(name, start, pageSize);
+    }
+
+    public List<Movie> getMoviesByDirectorNameWithPagination(String name, Integer pageNo, Integer pageSize) {
+        int start = (pageNo - 1) * pageSize;
+        return movieMapper.selectMoviesByDirectorNameWithPagination(name, start, pageSize);
+    }
+
+    public List<Movie> getMoviesByViews() {
+        QueryWrapper<Movie> queryWrapper = new QueryWrapper<>();
+        queryWrapper.orderByDesc("view");
+        return movieMapper.selectList(queryWrapper);
+    }
 }

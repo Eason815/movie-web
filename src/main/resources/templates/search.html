@@ -75,6 +75,32 @@
         .clear {
             clear: both;
         }
+
+        .pagination {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: #f2f2f2;
+            padding: 10px 0;
+            text-align: center;
+        }
+        .pagination a {
+            color: black;
+            padding: 8px 16px;
+            text-decoration: none;
+            transition: background-color .3s;
+            border: 1px solid #ddd;
+            margin: 0 4px;
+        }
+        .pagination a.active {
+            background-color: #4CAF50;
+            color: white;
+            border: 1px solid #4CAF50;
+        }
+        .pagination a:hover:not(.active) {
+            background-color: #ddd;
+        }
     </style>
 </head>
 <body>
@@ -84,8 +110,8 @@
     <button type="submit">Search</button>
 </form>
 <h1>Search Results</h1>
-<div th:if="${movies.size() == 0}">
-    <p>No movies found.</p>
+<div th:if="${movies.size() == 0}" style="text-align: center;">
+    <h2>No movies found.</h2>
 </div>
 <div th:each="movie : ${movies}" class="movie">
     <img th:src="'/image/' + ${movie.image}" th:alt="${movie.name}">
@@ -95,6 +121,26 @@
     <p th:text="'地区: ' + ${movie.region}">Region</p>
     <p th:text="'简介: ' + ${movie.introduce}">Introduction</p>
     <div class="clear"></div>
+</div>
+
+
+<div class="pagination">
+    <br/><br/>
+    <span><a th:href="@{/search(name=${name},pageNo=1)}">首页</a></span>&nbsp;&nbsp;
+    <span th:switch="${currentPage}">
+					<a th:case="1" th:href="@{/search(name=${name},pageNo=${currentPage})}">上一页</a>&nbsp;&nbsp;
+					<a  th:case="*" th:href="@{/search(name=${name},pageNo=${currentPage - 1})}">上一页</a>
+				</span>
+
+    <span th:if="${currentPage}==${PageCount}">
+				<a th:href="@{/search(name=${name},pageNo=1)}">下一页</a>&nbsp;&nbsp;
+			</span>
+    <span th:unless="${currentPage}==${PageCount}">
+				<a th:href="@{/search(name=${name},pageNo=${currentPage + 1})}">下一页</a>
+			</span>
+
+    <span>&nbsp;&nbsp;<a th:href="@{/search(name=${name},pageNo=${PageCount})}">尾页</a></span>
+    <br/><br/>
 </div>
 </body>
 </html>

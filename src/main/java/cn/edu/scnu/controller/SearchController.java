@@ -23,14 +23,33 @@ public class SearchController {
 //    }
 
     @GetMapping("/search")
-    public String index(@RequestParam(name = "name", required = false) String name, Model model) {
-        List<Movie> movies = movieService.getMoviesByActorName(name);
+    public String index(@RequestParam(name = "name", required = false) String name,
+                        @RequestParam(name = "pageNo", required = false,defaultValue = "1") Integer pageNo,
+                        Model model) {
+        List<Movie> movies = null;
+
+        List<Movie> movies1 = movieService.getMoviesByActorName(name);
         List<Movie> movies2 = movieService.getMoviesByDirectorName(name);
-        // 合并两个list
-        movies.addAll(movies2);
+
+        Integer pageSize=3;//每页显示的记录数
+        if(pageNo==null) pageNo=1;
+        Integer pageCount = 0;
+        if (movies1!=null) {
+            movies = movieService.getMoviesByActorNameWithPagination(name, pageNo, pageSize);
+            pageCount = (movies1.size() % pageSize == 0) ? (movies1.size() / pageSize) : (movies1.size() / pageSize + 1);
+        }
+        else if (movies2!=null) {
+            movies = movieService.getMoviesByDirectorNameWithPagination(name, pageNo, pageSize);
+            pageCount = (movies2.size() % pageSize == 0) ? (movies2.size() / pageSize) : (movies2.size() / pageSize + 1);
+        }
+
+
+
 
         model.addAttribute("movies", movies);
         model.addAttribute("name", name);
+        model.addAttribute("currentPage", pageNo);
+        model.addAttribute("PageCount", pageCount);
         return "search";
     }
 }
