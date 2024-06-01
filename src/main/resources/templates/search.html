@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Movie Search</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            color: #4CAF50; /* 设置标题颜色 */
+            text-align: center; /* 文本居中 */
+        }
+        form {
+            background-color: #f2f2f2; /* 设置表单背景颜色 */
+            border: 1px solid #ccc; /* 设置表单边框 */
+            padding: 20px; /* 设置表单内边距 */
+            margin: auto; /* 设置表单外边距自动，使表单居中 */
+            width: 50%; /* 设置表单宽度 */
+        }
+        input[type=text], button {
+            width: 100%; /* 设置输入框和按钮宽度 */
+            padding: 12px; /* 设置输入框和按钮内边距 */
+            margin: 8px 0; /* 设置输入框和按钮外边距 */
+            display: inline-block; /* 设置输入框和按钮为内联块级元素 */
+            border: 1px solid #ccc; /* 设置输入框和按钮边框 */
+            box-sizing: border-box; /* 设置盒模型为边框盒 */
+        }
+        button {
+            background-color: #4CAF50; /* 设置按钮背景颜色 */
+            color: white; /* 设置按钮文字颜色 */
+            cursor: pointer; /* 设置鼠标指针为手形 */
+        }
+        button:hover {
+            opacity: 0.8; /* 当鼠标悬停时改变按钮透明度 */
+        }
+        .movie {
+            position: relative;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            margin: auto; /* 设置上下边距为 10px，左右边距自动计算 */
+            width: 75%; /* 设置宽度为父元素宽度的 80% */
+            height: 10%;
+        }
+        .movie h2 {
+            margin: 0;
+            font-size: 1.5em;
+        }
+        .movie img {
+            height: 200px;
+            float: left;
+            margin-right: 10px;
+        }
+        .movie p {
+            margin-top: 5px;
+        }
+        .details-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 100px; /* 设置按钮宽度 */
+            height: 50px; /* 设置按钮高度 */
+            background-color: #4CAF50; /* 设置按钮背景颜色 */
+            border: none; /* 移除按钮边框 */
+            color: white; /* 设置按钮文字颜色 */
+            text-align: center; /* 文字居中 */
+            font-size: 16px; /* 设置文字大小 */
+            transition: 0.3s; /* 添加过渡效果 */
+            border-radius: 12px; /* 设置按钮边角的圆滑度 */
+        }
+        .details-button:hover {
+            background-color: #45a049; /* 当鼠标悬停时改变按钮背景颜色 */
+        }
+        .clear {
+            clear: both;
+        }
+    </style>
+</head>
+<body>
+<h1>Search for Movies</h1>
+<form action="/search" method="get">
+    <input type="text" name="name" placeholder="请输入：张国荣" th:value="${name}">
+    <button type="submit">Search</button>
+</form>
+<h1>Search Results</h1>
+<div th:if="${movies.size() == 0}">
+    <p>No movies found.</p>
+</div>
+<div th:each="movie : ${movies}" class="movie">
+    <img th:src="'/image/' + ${movie.image}" th:alt="${movie.name}">
+    <h2 th:text="${movie.name}">Movie Name</h2>
+    <button class="details-button" th:onclick="'location.href=\'/movieView?movieId=' + ${movie.movieId} + '\';'">Details</button>
+    <p th:text="'类型: ' + ${movie.genre}">Genre</p>
+    <p th:text="'地区: ' + ${movie.region}">Region</p>
+    <p th:text="'简介: ' + ${movie.introduce}">Introduction</p>
+    <div class="clear"></div>
+</div>
+</body>
+</html>
