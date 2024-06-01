@@ -14,7 +14,7 @@ public class MovieService extends ServiceImpl<MovieMapper, Movie> {
     @Autowired
     private MovieMapper movieMapper;
 
-    public Movie GetMovieById(int id) {
+    public Movie GetMovieById(Integer id) {
         return movieMapper.selectById(id);
     }
 
@@ -22,11 +22,11 @@ public class MovieService extends ServiceImpl<MovieMapper, Movie> {
         QueryWrapper<Movie> queryWrapper = new QueryWrapper<>();
 
         if (genre != null && !genre.isEmpty()) {
-            queryWrapper.eq("genre", genre);
+            queryWrapper.like("genre", genre);
         }
 
         if (region != null && !region.isEmpty()) {
-            queryWrapper.eq("region", region);
+            queryWrapper.like("region", region);
         }
 
         queryWrapper.orderByDesc("view");

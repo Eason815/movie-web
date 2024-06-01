@@ -10,71 +10,63 @@
             margin:auto
         }
     </style>
+    <script>
+
+    </script>
+
+
+
 </head>
+
+
+
 <body>
-<div id="main" style="width: 1100px; height: 750px;"></div>
-<script>
-    var chartDom = document.getElementById('main');
-    var myChart = echarts.init(chartDom);
-    var option;
+<main>
+    <table style="background-color: #c0c0c0;width: 100%;">
+        <tr style="line-height: 40px">
+            <td colspan=3 style="align-content: center">
+                <a th:href="'/index'" style="text-decoration:none;margin-left: 100px;"><span style=" color:black; font-weight:bold; font-size:medium;">主页</span></a>
+                <a th:href="'/rank'" style=" text-decoration:none;margin-left: 100px;"><span style=" color:black; font-weight:bold; font-size:medium;">电影</span></a>
+                <a  style=" text-decoration:none;margin-left: 100px;"><span style=" color:black; font-weight:bold; font-size:medium;">电视剧</span></a>
+                <a  style=" text-decoration:none;margin-left: 100px;"><span style=" color:black; font-weight:bold; font-size:medium;">综艺</span></a>
+                <a  style=" text-decoration:none;margin-left: 100px;"><span style=" color:black; font-weight:bold; font-size:medium;">动漫</span></a>
+            </td>
+        </tr>
+    </table>
+    <table style="margin-top:20px;width: 1100px;border-width: 1px;border-style: dotted;"align="center">
+        <td rowspan=8 width=200><img th:src="'/image/'+${movie.image}"></td>
+        <td colspan=2 align=center height=100><div style='font-weight:bold;font-size:medium;height:60px;line-height:60px;color:#000066;text-align:center;border-width:1px;  border-style:solid;border-color:black;'>
+            <span th:text="${movie.name}"><font size="5">电影名</font></span></div>
+        </td>
+        <tr>
+            <td width=40 style="text-align: center;"><font size=3 color="gray">类型：</font></td>
+            <td><font size=2 th:text="${movie.genre}"/></td>
+        </tr>
+        <tr>
+            <td width=40><font size=3 color="gray">地区：</font></td>
+            <td><font size=2 th:text="${movie.region}"/></td>
+        </tr>
+        <tr>
+            <td width=40><font size=3 color="gray">导演：</font></td>
+            <td><font size=2 th:text="${director}"/></td>
+        </tr>
+        <tr>
+            <td width=40><font size=3 color="gray">主演：</font></td>
+            <td><font size=2 th:text="${actors}"/></td>
+        </tr>
+        <tr>
+            <td width=40><font size=3 color="gray">简介：</font></td>
+            <td><font size=2 th:text="${movie.introduce}"/></td>
+        </tr>
+        <tr>
+            <td style="width: 200px;height: 100px;">
+                <button style="font-size: 3px; width: 80px; height: 40px;">播放</button>
+            </td>
+        </tr>
+    </table>
+</main>
 
-    option = {
-        tooltip: {
-            trigger: 'axis',
-            axisPointer: {
-                type: 'shadow'
-            }
-        },
-        grid: {
-            left: '3%',
-            right: '4%',
-            bottom: '3%',
-            containLabel: true
-        },
-        xAxis: {
-            type: 'category',
-            data: [],
-            max:6
-        },
-        yAxis: {
-            type: 'value'
-        },
-        series: [
-            {
-                data: [],
-                type: 'bar'
-            }
-        ]
-    };
-
-    option && myChart.setOption(option);
 
 
-    let movies = []
-
-    function fetchData() {
-        fetch('/rank')
-            .then(response => response.json())
-            .then(data => {
-                movies = data
-                updateChart();
-            });
-
-    }
-
-    function updateChart() {
-        movieNames = []
-        movieViews = []
-        for(let i = 0; i < movies.length; i ++ ){
-            movieNames.push(movies[i].name.split(" ")[0])
-            movieViews.push(movies[i].view)
-        }
-        option.xAxis.data = movieNames
-        option.series[0].data = movieViews;
-        myChart.setOption(option);
-    }
-
-    fetchData();
-</script>
 </body>
 </html>

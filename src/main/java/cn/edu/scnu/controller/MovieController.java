@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -19,10 +20,22 @@ public class MovieController {
     private MovieService movieService;
 
     @GetMapping("/rank")
-    @ResponseBody
-    public List<Movie> getMovies(@RequestParam(required = false) String genre,
-                                 @RequestParam(required = false) String region) {
-        return movieService.getMoviesByCriteria(genre, region);
+
+    public String getMovies(@RequestParam(required = false) String genre,
+                            @RequestParam(required = false) String region,
+                            @RequestParam(required = false) String rank,
+                            Model model) {
+
+        List<Movie> movies = movieService.getMoviesByCriteria(genre, region);
+        if (rank != null) {
+            switch (rank) {
+                case "rating" -> movies = movieService.getMoviesByLikes();
+                case "week" -> movies = movieService.getMoviesByWeekLikes();
+                case "month" -> movies = movieService.getMoviesByMonthlyLikes();
+            }
+        }
+        model.addAttribute("movies", movies);
+        return "rank";
     }
 
     @GetMapping("/rankByLikes")
@@ -94,5 +107,19 @@ public class MovieController {
     @GetMapping("/getDirectorByMovieId")
     public String getDirectorByMovieId(Integer id) {
         return movieService.getDirectorByMovieId(id);
+    }
+
+
+    @RequestMapping("/movieView")
+    public String movieinfo(@RequestParam(required = false) Integer movieId, Model model) {
+
+        Movie movie = movieService.GetMovieById(movieId);
+        model.addAttribute("movie", movie);
+
+        List<String> actors = movieService.getActorsByMovieId(movieId);
+        String director = movieService.getDirectorByMovieId(movieId);
+        model.addAttribute("actors", actors);
+        model.addAttribute("director", director);
+        return "movieView";
     }
 }

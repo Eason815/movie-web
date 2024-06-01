@@ -10,7 +10,7 @@ import lombok.Data;
 public class Movie {
 
     @TableId(type= IdType.AUTO)
-    private Long movieId;
+    private Integer movieId;
     private String name;
     private String genre;//类型
     private String region;//地区
