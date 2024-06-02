@@ -1,0 +1,43 @@
+.navbar {
+    display: flex;
+    justify-content: center;
+    background-color: #333;
+    padding: 10px;
+}
+.navbar a {
+    color: white;
+    padding: 14px 20px;
+    text-decoration: none;
+    text-align: center;
+}
+.navbar a:hover {
+    background-color: #575757;
+}
+.left-links {
+    flex: 1;
+    margin-left: 100px;
+}
+.right-links {
+
+    display: flex;
+    align-items: center;
+}
+
+#vip-tag {
+    background-color: gold;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    text-align: center;
+    font-weight: bold;
+}
+#noVip-tag {
+    background-color: rgba(178, 160, 160, 0.96);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(131, 115, 115, 0.5);
+    text-align: center;
+    font-weight: bold;
+}

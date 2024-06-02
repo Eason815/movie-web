@@ -28,19 +28,23 @@ public class SearchController {
                         Model model) {
         List<Movie> movies = null;
 
-        List<Movie> movies1 = movieService.getMoviesByActorName(name);
-        List<Movie> movies2 = movieService.getMoviesByDirectorName(name);
-
         Integer pageSize=3;//每页显示的记录数
         if(pageNo==null) pageNo=1;
         Integer pageCount = 0;
-        if (movies1!=null) {
+
+        List<Movie> movies1 = movieService.getMoviesByActorName(name);
+        Integer pageCount1 = (movies1.size() % pageSize == 0) ? (movies1.size() / pageSize) : (movies1.size() / pageSize + 1);
+
+        List<Movie> movies2 = movieService.getMoviesByDirectorName(name);
+        Integer pageCount2 = (movies2.size() % pageSize == 0) ? (movies2.size() / pageSize) : (movies2.size() / pageSize + 1);
+
+
+
+        if (pageCount1>0) {
             movies = movieService.getMoviesByActorNameWithPagination(name, pageNo, pageSize);
-            pageCount = (movies1.size() % pageSize == 0) ? (movies1.size() / pageSize) : (movies1.size() / pageSize + 1);
         }
-        else if (movies2!=null) {
+        else if (pageCount2>0) {
             movies = movieService.getMoviesByDirectorNameWithPagination(name, pageNo, pageSize);
-            pageCount = (movies2.size() % pageSize == 0) ? (movies2.size() / pageSize) : (movies2.size() / pageSize + 1);
         }
 
 

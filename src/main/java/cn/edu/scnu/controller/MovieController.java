@@ -5,6 +5,7 @@ import cn.edu.scnu.entity.TbUser;
 import cn.edu.scnu.service.MovieService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,7 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class MovieController {
@@ -69,17 +72,17 @@ public class MovieController {
         return movieService.getMoviesByDirectorName(directorName);
     }
 
-    @GetMapping("/movie")
+    @GetMapping("/checkMembership")
     @ResponseBody
-    public String getMoviePage(@RequestParam Long movieId, HttpSession session) {
-        Movie movie = movieService.getById(movieId);
+    public ResponseEntity<Map<String, Boolean>> checkMembership(HttpSession session) {
         TbUser user = (TbUser) session.getAttribute("user");
-
-        if (movie.isNeedVip() && (user == null || user.getIsVip() != 1)) {
-            return "不是vip";
+        Map<String, Boolean> response = new HashMap<>();
+        if (user != null && user.getIsVip()==1) {
+            response.put("isVip", true);
+        } else {
+            response.put("isVip", false);
         }
-
-        return "可以进入";
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/movieLikesChart")
@@ -112,7 +115,7 @@ public class MovieController {
 
 
     @RequestMapping("/movieView")
-    public String movieinfo(@RequestParam(required = false) Integer movieId, Model model) {
+    public String movieView(@RequestParam(required = false) Integer movieId,HttpSession session, Model model) {
 
         Movie movie = movieService.GetMovieById(movieId);
         model.addAttribute("movie", movie);
@@ -121,6 +124,12 @@ public class MovieController {
         String director = movieService.getDirectorByMovieId(movieId);
         model.addAttribute("actors", actors);
         model.addAttribute("director", director);
+
+
+
+        TbUser user = (TbUser) session.getAttribute("user");
+
+        model.addAttribute("user", user);
         return "movieView";
     }
 }
