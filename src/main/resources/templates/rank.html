@@ -4,6 +4,49 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MovieMania</title>
+    <script>
+        window.onload = function() {
+            // Get all buttons
+            var buttons = document.querySelectorAll('.filter-buttons button');
+
+            // Get the current URL parameters
+            var params = new URLSearchParams(window.location.search);
+
+            // Get the current genre and region
+            var currentGenre = params.get('genre');
+            var currentRegion = params.get('region');
+
+            for (var i = 0; i < buttons.length; i++) {
+                // Get the genre or region of the button
+                var buttonValue = buttons[i].getAttribute('onclick').split("'")[1];
+
+                // If the button's genre or region matches the current genre or region, add the 'active' class
+                if (buttonValue === currentGenre || buttonValue === currentRegion) {
+                    buttons[i].classList.add('active');
+                }
+            }
+        };
+
+        function filterMovies(type, value) {
+            // Remove the 'active' class from all buttons
+            var buttons = document.querySelectorAll('.filter-buttons button');
+            for (var i = 0; i < buttons.length; i++) {
+                buttons[i].classList.remove('active');
+            }
+
+            // Add the 'active' class to the clicked button
+            event.target.classList.add('active');
+
+            let url = new URL(window.location.href);
+            url.searchParams.set(type, value);
+            url.searchParams.set("pageNo", 1);
+            window.location.href = url.toString();
+        }
+    </script>
+    <script src="/js/VipLabel.js"></script>
+
+    <link rel="stylesheet" href="/css/navbar.css">
+
     <style>
         .movie-list {
             display: flex; /* 添加这行 */
@@ -29,39 +72,135 @@
             font-size: 1.5em;
         }
         .movie p {
-            margin-top: 5px;
+            margin-top: 1px;
         }
 
+        .filter-group {
+            margin-left: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
 
+        .filter-group h2 {
+            margin: 0;
+            flex: 1;
+        }
+
+        .filter-buttons {
+            display: flex;
+            flex: 3;
+            justify-content: space-around;
+        }
+
+        .filter-buttons button {
+            background-color: #f2f2f2;
+            border: none;
+            color: #333;
+            padding: 10px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .filter-buttons button:hover {
+            background-color: #ddd;
+        }
+
+        .filter-buttons button.active {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .pagination {
+            background-color: #f2f2f2;
+            text-align: center;
+        }
+        .pagination a {
+            color: black;
+            padding: 8px 16px;
+            text-decoration: none;
+            transition: background-color .3s;
+            border: 1px solid #ddd;
+            margin: 0 4px;
+        }
+        .pagination a.active {
+            background-color: #4CAF50;
+            color: white;
+            border: 1px solid #4CAF50;
+        }
+        .pagination a:hover:not(.active) {
+            background-color: #ddd;
+        }
     </style>
-<!--    <link rel="stylesheet" href="/css/styles.css">-->
+
 </head>
 <body>
+<div class="navbar">
+    <div class="left-links">
+        <a th:href="@{/index}">主页</a>
+        <a th:href="@{/rank}">电影</a>
+        <a th:href="@{/search}">搜索</a>
+    </div>
+
+    <div class="right-links">
+
+        <a id="vip-tag" style="display: none;">VIP</a>
+        <a id="noVip-tag" style="display: none;">普通</a>
+        <div th:if="${session.user}">
+            <span id="head_span1">
+                <a th:href="@{/toLogOut(returnUrl=${httpServletRequest.requestURI + (httpServletRequest.queryString != null ? '?' + httpServletRequest.queryString : '')})}">退出</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+            </span>
+        </div>
+
+        <div th:unless="${session.user}">
+            <span id="head_span2">
+                <a th:href="@{/toLoginPage(returnUrl=${httpServletRequest.requestURI + (httpServletRequest.queryString != null ? '?' + httpServletRequest.queryString : '')})}">登录</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+                <a th:href="@{/toRegisterPage(returnUrl=${httpServletRequest.requestURI + (httpServletRequest.queryString != null ? '?' + httpServletRequest.queryString : '')})}">注册</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+            </span>
+        </div>
+    </div>
+</div>
+
+
     <header>
         <h1>MovieMania</h1>
     </header>
     <main>
+
+
         <section class="filters">
             <div class="filter-group">
                 <h2>按类型</h2>
-                <button onclick="filterMovies('genre', '')">全部</button>
-                <button onclick="filterMovies('genre', '喜剧')">喜剧</button>
-                <button onclick="filterMovies('genre', '爱情')">爱情</button>
-                <button onclick="filterMovies('genre', '恐怖')">恐怖</button>
-                <button onclick="filterMovies('genre', '科幻')">科幻</button>
+                <div class="filter-buttons">
+                    <button onclick="filterMovies('genre', '')">全部</button>
+                    <button onclick="filterMovies('genre', '喜剧')">喜剧</button>
+                    <button onclick="filterMovies('genre', '爱情')">爱情</button>
+                    <button onclick="filterMovies('genre', '恐怖')">恐怖</button>
+                    <button onclick="filterMovies('genre', '科幻')">科幻</button>
+                </div>
             </div>
             <div class="filter-group">
                 <h2>按地区</h2>
-                <button onclick="filterMovies('region', '')">全部</button>
-                <button onclick="filterMovies('region', '大陆')">大陆</button>
-                <button onclick="filterMovies('region', '香港')">香港</button>
-                <button onclick="filterMovies('region', '台湾')">台湾</button>
-                <button onclick="filterMovies('region', '美国')">美国</button>
+                <div class="filter-buttons">
+                    <button onclick="filterMovies('region', '')">全部</button>
+                    <button onclick="filterMovies('region', '大陆')">大陆</button>
+                    <button onclick="filterMovies('region', '香港')">香港</button>
+                    <button onclick="filterMovies('region', '台湾')">台湾</button>
+                    <button onclick="filterMovies('region', '美国')">美国</button>
+                </div>
             </div>
         </section>
+
+
         <section class="rankings">
             <h2>排行榜</h2>
-            <button onclick="filterMovies('rank', '')">全部排行</button>
+            <button onclick="filterMovies('rank', 'all')">全部排行</button>
             <button onclick="filterMovies('rank', 'hot')">热播排行</button>
             <button onclick="filterMovies('rank', 'week')">本周排行</button>
             <button onclick="filterMovies('rank', 'month')">本月排行</button>
@@ -81,12 +220,29 @@
             </div>
         </section>
     </main>
-    <script>
-        function filterMovies(type, value) {
-            let url = new URL(window.location.href);
-            url.searchParams.set(type, value);
-            window.location.href = url.toString();
-        }
-    </script>
+
+
+<div class="pagination">
+    <br>
+    <span><a th:href="@{/rank(genre=${genre},region=${region},rank=${rank},pageNo=1)}">首页</a></span>&nbsp;&nbsp;
+    <span th:switch="${currentPage}">
+					<a th:case="1" th:href="@{/rank(genre=${genre},region=${region},rank=${rank},pageNo=${currentPage})}">上一页</a>&nbsp;&nbsp;
+					<a  th:case="*" th:href="@{/rank(genre=${genre},region=${region},rank=${rank},pageNo=${currentPage - 1})}">上一页</a>
+				</span>
+
+    <span th:if="${currentPage}==${PageCount}">
+				<a th:href="@{/rank(genre=${genre},region=${region},rank=${rank},pageNo=1)}">下一页</a>&nbsp;&nbsp;
+			</span>
+    <span th:unless="${currentPage}==${PageCount}">
+				<a th:href="@{/rank(genre=${genre},region=${region},rank=${rank},pageNo=${currentPage + 1})}">下一页</a>
+			</span>
+
+    <span>&nbsp;&nbsp;<a th:href="@{/rank(genre=${genre},region=${region},rank=${rank},pageNo=${PageCount})}">尾页</a></span>
+    <br/><br/>
+
+</div>
+
+
+
 </body>
 </html>

@@ -16,16 +16,22 @@
                 var password2=$("input[name='password2']").val();
                $.post("/doRegister",{"username":username,"password":password,"password2":password2},function(result){
                    if(result !=null){
-                       alert(result);
-                       window.location.href="/index";
+                       alert(result[0]);
+                       if(result[0]==="注册成功") {
+                            window.location.href="/toLoginPage";
+                       }
                    }
                });
                return false;
             });
         })
+        function back() {
+
+        }
     </script>
 </head>
 <body class="text-center">
+<a onclick="back()">返回</a>
 <!--  用户注册form表单 -->
 <form class="form-signin">
     <img class="mb-4" th:src="@{/login/img/login.jpg}" width="72" height="72">

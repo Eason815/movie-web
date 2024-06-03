@@ -7,7 +7,10 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.ListResourceBundle;
+import java.util.stream.Collectors;
 
 @Service
 public class MovieService extends ServiceImpl<MovieMapper, Movie> {
@@ -18,7 +21,9 @@ public class MovieService extends ServiceImpl<MovieMapper, Movie> {
         return movieMapper.selectById(id);
     }
 
-    public List<Movie> getMoviesByCriteria(String genre, String region) {
+    public List<Movie> getMoviesByCriteria(List<Movie> movies, String genre, String region) {
+        //首先从数据库中获取所有符合条件的电影，然后使用 filter 方法来筛选出那些在 movies 列表中的电影。
+        //这将保留 movies 列表的顺序，因为是按照 movies 列表的顺序来筛选电影的。
         QueryWrapper<Movie> queryWrapper = new QueryWrapper<>();
 
         if (genre != null && !genre.isEmpty()) {
@@ -29,9 +34,18 @@ public class MovieService extends ServiceImpl<MovieMapper, Movie> {
             queryWrapper.like("region", region);
         }
 
-        queryWrapper.orderByDesc("view");
+        List<Movie> allMovies = movieMapper.selectList(queryWrapper);
 
-        return movieMapper.selectList(queryWrapper);
+        List<Movie> movies1 = new ArrayList<>();
+        if (movies != null && !movies.isEmpty()) {
+            for (Movie movie : movies) {
+                if (allMovies.contains(movie)) {
+                    movies1.add(movie);
+                }
+            }
+        }
+
+        return movies1;
     }
 
     public List<Movie> getMoviesByLikes() {
@@ -75,6 +89,13 @@ public class MovieService extends ServiceImpl<MovieMapper, Movie> {
     public List<Movie> getMoviesByViews() {
         QueryWrapper<Movie> queryWrapper = new QueryWrapper<>();
         queryWrapper.orderByDesc("view");
+        return movieMapper.selectList(queryWrapper);
+    }
+
+    public List<Movie> AllMovies() {
+        // 获取所有电影后 随机排序
+        QueryWrapper<Movie> queryWrapper = new QueryWrapper<>();
+        queryWrapper.orderByAsc("RAND()");
         return movieMapper.selectList(queryWrapper);
     }
 }

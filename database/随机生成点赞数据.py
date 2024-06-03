@@ -9,8 +9,8 @@ conn = pymysql.connect(host="localhost", port=3306, user="root", password="12345
 
 def generate_random_datetime():
     year = 2024
-    month = 6
-    day = random.randint(1, 30)  # 假设六月份有30天
+    month = random.randint(1, 6)  # 假设只有1-6月份的数据
+    day = random.randint(1, 28)  
     hour = random.randint(0, 23)
     minute = random.randint(0, 59)
     second = random.randint(0, 59)

@@ -3,6 +3,7 @@ package cn.edu.scnu.controller;
 import cn.edu.scnu.entity.Movie;
 import cn.edu.scnu.entity.TbUser;
 import cn.edu.scnu.service.MovieService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,44 +22,6 @@ import java.util.Map;
 public class MovieController {
     @Autowired
     private MovieService movieService;
-
-    @GetMapping("/rank")
-
-    public String getMovies(@RequestParam(required = false) String genre,
-                            @RequestParam(required = false) String region,
-                            @RequestParam(required = false) String rank,
-                            Model model) {
-
-        List<Movie> movies = movieService.getMoviesByCriteria(genre, region);
-        if (rank != null) {
-            switch (rank) {
-                case "hot" -> movies = movieService.getMoviesByViews();
-                case "rating" -> movies = movieService.getMoviesByLikes();
-                case "week" -> movies = movieService.getMoviesByWeekLikes();
-                case "month" -> movies = movieService.getMoviesByMonthlyLikes();
-            }
-        }
-        model.addAttribute("movies", movies);
-        return "rank";
-    }
-
-    @GetMapping("/rankByLikes")
-    @ResponseBody
-    public List<Movie> getMoviesByLikes() {
-        return movieService.getMoviesByLikes();
-    }
-
-    @GetMapping("/rankByWeekLikes")
-    @ResponseBody
-    public List<Movie> getMoviesByWeekLikes() {
-        return movieService.getMoviesByWeekLikes();
-    }
-
-    @GetMapping("/rankByMonthlyLikes")
-    @ResponseBody
-    public List<Movie> getMoviesByMonthlyLikes() {
-        return movieService.getMoviesByMonthlyLikes();
-    }
 
     @GetMapping("/searchByActor")
     @ResponseBody
@@ -115,7 +78,10 @@ public class MovieController {
 
 
     @RequestMapping("/movieView")
-    public String movieView(@RequestParam(required = false) Integer movieId,HttpSession session, Model model) {
+    public String movieView(@RequestParam(required = false) Integer movieId,
+                            HttpSession session,
+                            HttpServletRequest request,
+                            Model model) {
 
         Movie movie = movieService.GetMovieById(movieId);
         model.addAttribute("movie", movie);
@@ -124,7 +90,7 @@ public class MovieController {
         String director = movieService.getDirectorByMovieId(movieId);
         model.addAttribute("actors", actors);
         model.addAttribute("director", director);
-
+        model.addAttribute("httpServletRequest", request);
 
 
         TbUser user = (TbUser) session.getAttribute("user");

@@ -1,12 +1,22 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+
 .navbar {
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
     background-color: #333;
     padding: 10px;
+    height: 28px;
 }
 .navbar a {
+    width: 100px;
     color: white;
-    padding: 14px 20px;
+    padding: 14px 50px;
     text-decoration: none;
     text-align: center;
 }
@@ -15,18 +25,27 @@
 }
 .left-links {
     flex: 1;
-    margin-left: 100px;
+    margin-left: 200px;
 }
 .right-links {
 
     display: flex;
     align-items: center;
+    margin-right: 100px;
+}
+.right-links a {
+    width: 50px;
+    color: white;
+    padding: 14px 20px;
+    text-decoration: none;
+    text-align: center;
 }
 
 #vip-tag {
     background-color: gold;
     color: white;
     padding: 5px 10px;
+    margin-right: 20px;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
     text-align: center;
@@ -36,6 +55,7 @@
     background-color: rgba(178, 160, 160, 0.96);
     color: white;
     padding: 5px 10px;
+    margin-right: 20px;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(131, 115, 115, 0.5);
     text-align: center;

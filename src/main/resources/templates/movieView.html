@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -125,6 +125,7 @@
     <div class="left-links">
         <a th:href="@{/index}">主页</a>
         <a th:href="@{/rank}">电影</a>
+        <a th:href="@{/search}">搜索</a>
     </div>
 
     <div class="right-links">
@@ -133,17 +134,14 @@
         <a id="noVip-tag" style="display: none;">普通</a>
         <div th:if="${session.user}">
             <span id="head_span1">
-                <a th:href="@{/toLogOut}">退出</a>&nbsp;&nbsp;|&nbsp;&nbsp;
-                <a th:href="@{/toRegisterPage}">注册</a>&nbsp;&nbsp;|&nbsp;&nbsp;
-                <a th:href="@{/toManagePage}">后台</a>
+                <a th:href="@{/toLogOut(returnUrl=${httpServletRequest.requestURI + (httpServletRequest.queryString != null ? '?' + httpServletRequest.queryString : '')})}">退出</a>&nbsp;&nbsp;|&nbsp;&nbsp;
             </span>
         </div>
 
         <div th:unless="${session.user}">
             <span id="head_span2">
-                <a th:href="@{/toLoginPage}">登录</a>&nbsp;&nbsp;|&nbsp;&nbsp;
-                <a th:href="@{/toRegisterPage}">注册</a>&nbsp;&nbsp;|&nbsp;&nbsp;
-                <a th:href="@{/toManagePage}">后台</a>
+                <a th:href="@{/toLoginPage(returnUrl=${httpServletRequest.requestURI + (httpServletRequest.queryString != null ? '?' + httpServletRequest.queryString : '')})}">登录</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+                <a th:href="@{/toRegisterPage(returnUrl=${httpServletRequest.requestURI + (httpServletRequest.queryString != null ? '?' + httpServletRequest.queryString : '')})}">注册</a>&nbsp;&nbsp;|&nbsp;&nbsp;
             </span>
         </div>
     </div>

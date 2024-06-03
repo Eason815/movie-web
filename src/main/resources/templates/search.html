@@ -3,10 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Movie Search</title>
+
     <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
         h1 {
             color: #4CAF50; /* 设置标题颜色 */
             text-align: center; /* 文本居中 */
@@ -48,7 +46,7 @@
             font-size: 1.5em;
         }
         .movie img {
-            height: 200px;
+            height: 150px;
             float: left;
             margin-right: 10px;
         }
@@ -77,12 +75,11 @@
         }
 
         .pagination {
-            position: fixed;
-            bottom: 0;
+            position: absolute;
             left: 0;
             right: 0;
             background-color: #f2f2f2;
-            padding: 10px 0;
+            padding: 1px 0;
             text-align: center;
         }
         .pagination a {
@@ -102,15 +99,45 @@
             background-color: #ddd;
         }
     </style>
+    <link rel="stylesheet" href="/css/navbar.css">
+    <script src="/js/VipLabel.js"></script>
 </head>
 <body>
-<h1>Search for Movies</h1>
+
+<div class="navbar">
+    <div class="left-links">
+        <a th:href="@{/index}">主页</a>
+        <a th:href="@{/rank}">电影</a>
+        <a th:href="@{/search}">搜索</a>
+    </div>
+
+    <div class="right-links">
+
+        <a id="vip-tag" style="display: none;">VIP</a>
+        <a id="noVip-tag" style="display: none;">普通</a>
+        <div th:if="${session.user}">
+            <span id="head_span1">
+                <a th:href="@{/toLogOut(returnUrl=${httpServletRequest.requestURI + (httpServletRequest.queryString != null ? '?' + httpServletRequest.queryString : '')})}">退出</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+            </span>
+        </div>
+
+        <div th:unless="${session.user}">
+            <span id="head_span2">
+                <a th:href="@{/toLoginPage(returnUrl=${httpServletRequest.requestURI + (httpServletRequest.queryString != null ? '?' + httpServletRequest.queryString : '')})}">登录</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+                <a th:href="@{/toRegisterPage(returnUrl=${httpServletRequest.requestURI + (httpServletRequest.queryString != null ? '?' + httpServletRequest.queryString : '')})}">注册</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+            </span>
+        </div>
+    </div>
+</div>
+
+
+
 <form action="/search" method="get">
     <input type="text" name="name" placeholder="请输入：张国荣" th:value="${name}">
     <button type="submit">Search</button>
 </form>
 <h1>Search Results</h1>
-<div th:if="${movies.size() == 0}" style="text-align: center;">
+<div th:unless="${movies != null and movies.size() > 0}" style="text-align: center;">
     <h2>No movies found.</h2>
 </div>
 <div th:each="movie : ${movies}" class="movie">
@@ -125,7 +152,7 @@
 
 
 <div class="pagination">
-    <br/><br/>
+    <br>
     <span><a th:href="@{/search(name=${name},pageNo=1)}">首页</a></span>&nbsp;&nbsp;
     <span th:switch="${currentPage}">
 					<a th:case="1" th:href="@{/search(name=${name},pageNo=${currentPage})}">上一页</a>&nbsp;&nbsp;

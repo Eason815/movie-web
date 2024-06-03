@@ -1,53 +1,45 @@
 <!DOCTYPE HTML>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>欢迎光临</title>
+    <title>Man8OutMovie</title>
+    <link rel="stylesheet" href="/css/navbar.css">
     <meta http-equiv="Content-type" content="text/html; charset=UTF-8" />
-    <script>
-        $(function() {
+    <script src="/js/echarts.min.js"></script>
+    <script src="/js/VipLabel.js"></script>
 
-            $("form").submit(function() {
-                var email = $("input[name='email']").val();
-                var password = $("input[name='password']").val();
 
-                $.post("/doLogin", {
-                    "email" : email,
-                    "password" : password
-                }, function(result) {
-                    $("#form_msg").html(result);
-                    $("#form_msg").css("color", "red");
-                    window.location.href="/index";
-                });
 
-                return false;
-            })
-        })
-    </script>
+
 </head>
 <body>
-<div id="common_head">
-    <div>
-        <div>
-            <li class="fore1" id="loginbar" clstag="homepage|keycount|home2013|01b">
-                <p th:if="${session.user}"><span th:text="'欢迎'+${session.user.getUsername()}+'回来'"></span>
-                    <span id="head_span1">
-                        <a th:href="@{/toLogOut}">退出</a>&nbsp;&nbsp;|&nbsp;&nbsp;
-                        <a th:href="@{/toRegisterPage}">注册</a>&nbsp;&nbsp;|&nbsp;&nbsp;
-                        <a th:href="@{/toManagePage}">后台</a>
-                    </span>
-                </p>
+<div class="navbar">
+    <div class="left-links">
+        <a th:href="@{/index}">主页</a>
+        <a th:href="@{/rank}">电影</a>
+        <a th:href="@{/search}">搜索</a>
+    </div>
 
-                <p th:unless="${session.user}">
-                <span id="head_span2">
-                    <a th:href="@{/toLoginPage}">登录</a>&nbsp;&nbsp;|&nbsp;&nbsp;
-                    <a th:href="@{/toRegisterPage}">注册</a>&nbsp;&nbsp;|&nbsp;&nbsp;
-                    <a th:href="@{/toManagePage}">后台</a>
-                </span>
-                </p>
+    <div class="right-links">
 
-            </li>
+        <a id="vip-tag" style="display: none;">VIP</a>
+        <a id="noVip-tag" style="display: none;">普通</a>
+        <div th:if="${session.user}">
+            <span id="head_span1">
+                <a th:href="@{/toLogOut(returnUrl=${httpServletRequest.requestURI + (httpServletRequest.queryString != null ? '?' + httpServletRequest.queryString : '')})}">退出</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+            </span>
+        </div>
+
+        <div th:unless="${session.user}">
+            <span id="head_span2">
+                <a th:href="@{/toLoginPage(returnUrl=${httpServletRequest.requestURI + (httpServletRequest.queryString != null ? '?' + httpServletRequest.queryString : '')})}">登录</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+                <a th:href="@{/toRegisterPage(returnUrl=${httpServletRequest.requestURI + (httpServletRequest.queryString != null ? '?' + httpServletRequest.queryString : '')})}">注册</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+            </span>
         </div>
     </div>
 </div>
+
+
+
+
 </body>
 </html>

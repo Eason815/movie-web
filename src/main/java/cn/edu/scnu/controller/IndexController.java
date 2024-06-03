@@ -1,5 +1,6 @@
 package cn.edu.scnu.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.boot.Banner;
 import org.springframework.stereotype.Controller;
@@ -11,7 +12,9 @@ import java.util.Calendar;
 @Controller
 public class IndexController {
     @RequestMapping("/index")
-    public String toIndexPage(){
+    public String toIndexPage(HttpServletRequest request, Model model){
+
+        model.addAttribute("httpServletRequest", request);
         return "index";
     }
 

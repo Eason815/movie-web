@@ -3,6 +3,7 @@ package cn.edu.scnu.controller;
 import cn.edu.scnu.entity.Movie;
 import cn.edu.scnu.entity.Staff;
 import cn.edu.scnu.service.MovieService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.Banner;
 import org.springframework.stereotype.Controller;
@@ -25,6 +26,7 @@ public class SearchController {
     @GetMapping("/search")
     public String index(@RequestParam(name = "name", required = false) String name,
                         @RequestParam(name = "pageNo", required = false,defaultValue = "1") Integer pageNo,
+                        HttpServletRequest request,
                         Model model) {
         List<Movie> movies = null;
 
@@ -42,18 +44,19 @@ public class SearchController {
 
         if (pageCount1>0) {
             movies = movieService.getMoviesByActorNameWithPagination(name, pageNo, pageSize);
+            pageCount = pageCount1;
         }
         else if (pageCount2>0) {
             movies = movieService.getMoviesByDirectorNameWithPagination(name, pageNo, pageSize);
+            pageCount = pageCount2;
         }
-
-
 
 
         model.addAttribute("movies", movies);
         model.addAttribute("name", name);
         model.addAttribute("currentPage", pageNo);
         model.addAttribute("PageCount", pageCount);
+        model.addAttribute("httpServletRequest", request);
         return "search";
     }
 }

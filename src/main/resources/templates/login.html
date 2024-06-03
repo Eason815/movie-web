@@ -4,8 +4,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1,shrink-to-fit=no">
     <title>用户登录界面</title>
-    <link th:href="@{login/css/bootstrap.min.css}" rel="stylesheet">
-    <link th:href="@{login/css/signin.css}" rel="stylesheet">
+
     <script src="js/jquery-3.4.1.js"></script>
     <script>
         $(function(){
@@ -13,12 +12,18 @@
 
                 var username=$("input[name='username']").val();
                 var password=$("input[name='password']").val();
+                var returnUrl= $('#returnUrl').data('returnUrl');
 
                $.post("/doLogin",{"username":username,"password":password},function(result){
                    if(result !=null) {
-                       alert(result);
-                       window.location.href = "/index";
-                   }
+                       alert(result[0]);
+                       if (result[0]==="登录成功!") {
+                            if (returnUrl == null || returnUrl === "")
+                                window.location.href = "/index";
+                            else
+                                window.location.href = returnUrl;
+                       }
+               }
                });
                return false;
             });
@@ -26,6 +31,7 @@
     </script>
 </head>
 <body class="text-center">
+<div id="returnUrl" th:attr="data-return-url=${returnUrl}">返回</div>
 
 <!--  用户登录form表单 -->
 <div class="form-signin">
