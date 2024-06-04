@@ -25,13 +25,14 @@
                return false;
             });
         })
-        function back() {
 
-        }
     </script>
 </head>
 <body class="text-center">
-<a onclick="back()">返回</a>
+
+
+<div id="returnUrl" th:attr="data-return-url=${returnUrl}" onclick="window.location.href=this.getAttribute('data-return-url')">返回</div>
+
 <!--  用户注册form表单 -->
 <form class="form-signin">
     <img class="mb-4" th:src="@{/login/img/login.jpg}" width="72" height="72">
@@ -46,5 +47,8 @@
     <button class="btn btn-lg btn-primary btn-block" type="submit">注册</button>
     <p class="mt-5 mb-3 text-muted">© <span th:text="${currentYear}">2018</span>-<span th:text="${currentYear}+1">2019</span></p>
 </form>
+
+
+
 </body>
 </html>

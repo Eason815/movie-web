@@ -5,42 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MovieMania</title>
     <script>
-        window.onload = function() {
-            // Get all buttons
-            var buttons = document.querySelectorAll('.filter-buttons button');
-
-            // Get the current URL parameters
-            var params = new URLSearchParams(window.location.search);
-
-            // Get the current genre and region
-            var currentGenre = params.get('genre');
-            var currentRegion = params.get('region');
-
-            for (var i = 0; i < buttons.length; i++) {
-                // Get the genre or region of the button
-                var buttonValue = buttons[i].getAttribute('onclick').split("'")[1];
-
-                // If the button's genre or region matches the current genre or region, add the 'active' class
-                if (buttonValue === currentGenre || buttonValue === currentRegion) {
-                    buttons[i].classList.add('active');
-                }
-            }
-        };
-
         function filterMovies(type, value) {
-            // Remove the 'active' class from all buttons
-            var buttons = document.querySelectorAll('.filter-buttons button');
-            for (var i = 0; i < buttons.length; i++) {
-                buttons[i].classList.remove('active');
-            }
-
-            // Add the 'active' class to the clicked button
-            event.target.classList.add('active');
-
             let url = new URL(window.location.href);
             url.searchParams.set(type, value);
             url.searchParams.set("pageNo", 1);
             window.location.href = url.toString();
+
         }
     </script>
     <script src="/js/VipLabel.js"></script>
@@ -48,74 +18,97 @@
     <link rel="stylesheet" href="/css/navbar.css">
 
     <style>
-        .movie-list {
-            display: flex; /* 添加这行 */
-            flex-wrap: wrap; /* 添加这行，使电影项在需要时换行 */
-            justify-content: space-around; /* 添加这行，使电影项在行中均匀分布 */
-            margin: 20px 200px; /* 修改这行，使电影列表在上下都有边距 */
+
+        header {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 1em 0;
         }
-        .movie {
-            position: relative;
-            border: 1px solid #ccc;
-            padding: 10px;
-            border-radius: 5px;
-            margin: 10px; /* 修改这行，使电影项在四周都有边距 */
-            width: calc(16% - 20px); /* 修改这行，使电影项的宽度为容器宽度的三分之一，减去边距 */
-            float: none; /* 修改这行 */
-        }
-        .movie img {
-            height: 150px;
-            margin-right: 10px;
-        }
-        .movie h2 {
+
+        h1 {
             margin: 0;
-            font-size: 1.5em;
         }
-        .movie p {
-            margin-top: 1px;
+
+        main {
+            padding-top: 20px;
+            padding-left: 100px;
+            padding-right: 100px;
+        }
+
+        .filters {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
 
         .filter-group {
-            margin-left: 200px;
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            margin-bottom: 10px;
+            gap: 100px;
         }
 
         .filter-group h2 {
             margin: 0;
-            flex: 1;
         }
 
-        .filter-buttons {
+        .b1,.b2,.b3 {
             display: flex;
-            flex: 3;
-            justify-content: space-around;
+            gap: 20px;
         }
 
-        .filter-buttons button {
+        .b1 button,.b2 button,.b3 button {
             background-color: #f2f2f2;
             border: none;
             color: #333;
-            padding: 10px;
+            padding: 10px 20px;
             text-align: center;
             text-decoration: none;
-            display: inline-block;
             font-size: 16px;
-            margin: 4px 2px;
             cursor: pointer;
             transition: background-color 0.3s;
         }
 
-        .filter-buttons button:hover {
+        .b1 button:hover,.b2 button:hover,.b3 button:hover {
             background-color: #ddd;
         }
 
-        .filter-buttons button.active {
+        .b1 button.active,.b2 button.active,.b3 button.active {
             background-color: #4CAF50;
             color: white;
         }
+
+        .movie-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .movie {
+            width: 200px;
+            cursor: pointer;
+            transition: transform 0.3s;
+            margin-right: 30px;
+        }
+
+        .movie:hover {
+            transform: scale(1.05);
+        }
+
+        .movie img {
+            width: 100%;
+            height: auto;
+        }
+
+        .movie h2 {
+            font-size: 18px;
+            margin: 10px 0 5px;
+        }
+
+        .movie p {
+            margin: 5px 0;
+        }
+
 
         .pagination {
             background-color: #f2f2f2;
@@ -168,58 +161,56 @@
 </div>
 
 
-    <header>
-        <h1>MovieMania</h1>
-    </header>
-    <main>
-
-
-        <section class="filters">
-            <div class="filter-group">
-                <h2>按类型</h2>
-                <div class="filter-buttons">
-                    <button onclick="filterMovies('genre', '')">全部</button>
-                    <button onclick="filterMovies('genre', '喜剧')">喜剧</button>
-                    <button onclick="filterMovies('genre', '爱情')">爱情</button>
-                    <button onclick="filterMovies('genre', '恐怖')">恐怖</button>
-                    <button onclick="filterMovies('genre', '科幻')">科幻</button>
-                </div>
+<header>
+    <h1>MovieMania</h1>
+</header>
+<main>
+    <section class="filters">
+        <div class="filter-group">
+            <h2>按类型</h2>
+            <div class="b1">
+                <button th:classappend="${genre == null || genre == '' ? 'active' : ''}" onclick="filterMovies('genre', '')"  >全部</button>
+                <button th:classappend="${genre == '冒险' ? 'active' : ''}" onclick="filterMovies('genre', '冒险')">冒险</button>
+                <button th:classappend="${genre == '爱情' ? 'active' : ''}" onclick="filterMovies('genre', '爱情')">爱情</button>
+                <button th:classappend="${genre == '惊悚' ? 'active' : ''}" onclick="filterMovies('genre', '惊悚')">惊悚</button>
+                <button th:classappend="${genre == '犯罪' ? 'active' : ''}" onclick="filterMovies('genre', '犯罪')">犯罪</button>
+                <button th:classappend="${genre == '奇幻' ? 'active' : ''}" onclick="filterMovies('genre', '奇幻')">奇幻</button>
             </div>
-            <div class="filter-group">
-                <h2>按地区</h2>
-                <div class="filter-buttons">
-                    <button onclick="filterMovies('region', '')">全部</button>
-                    <button onclick="filterMovies('region', '大陆')">大陆</button>
-                    <button onclick="filterMovies('region', '香港')">香港</button>
-                    <button onclick="filterMovies('region', '台湾')">台湾</button>
-                    <button onclick="filterMovies('region', '美国')">美国</button>
-                </div>
+        </div>
+        <div class="filter-group">
+            <h2>按地区</h2>
+            <div class="b2">
+                <button th:classappend="${region == null || region == '' ? 'active' : ''}" onclick="filterMovies('region', '')"  >全部</button>
+                <button th:classappend="${region == '大陆' ? 'active' : ''}" onclick="filterMovies('region', '大陆')">大陆</button>
+                <button th:classappend="${region == '香港' ? 'active' : ''}" onclick="filterMovies('region', '香港')">香港</button>
+                <button th:classappend="${region == '台湾' ? 'active' : ''}" onclick="filterMovies('region', '台湾')">台湾</button>
+                <button th:classappend="${region == '美国' ? 'active' : ''}" onclick="filterMovies('region', '美国')">美国</button>
+                <button th:classappend="${region == '日本' ? 'active' : ''}" onclick="filterMovies('region', '日本')">日本</button>
             </div>
-        </section>
-
-
-        <section class="rankings">
+        </div>
+        <div class="filter-group">
             <h2>排行榜</h2>
-            <button onclick="filterMovies('rank', 'all')">全部排行</button>
-            <button onclick="filterMovies('rank', 'hot')">热播排行</button>
-            <button onclick="filterMovies('rank', 'week')">本周排行</button>
-            <button onclick="filterMovies('rank', 'month')">本月排行</button>
-            <button onclick="filterMovies('rank', 'rating')">好评排行</button>
-        </section>
-        <h2>电影列表</h2>
-
-
-        <section class="movie-list">
-
-            <div th:each="movie : ${movies}" class="movie" th:onclick="'location.href=\'/movieView?movieId=' + ${movie.movieId} + '\';'">
-                <img th:src="'/image/' + ${movie.image}" th:alt="${movie.name}">
-                <h2 th:text="${movie.name}">Movie Name</h2>
-                <p th:text="'类型: ' + ${movie.genre}">Genre</p>
-                <p th:text="'地区: ' + ${movie.region}">Region</p>
-                <div class="clear"></div>
+            <div class="b3">
+                <button th:classappend="${rank == null || rank == '' ? 'active' : ''}" onclick="filterMovies('rank', '')"  >全部排行</button>
+                <button th:classappend="${rank == 'hot' ? 'active' : ''}" onclick="filterMovies('rank', 'hot')">热播排行</button>
+                <button th:classappend="${rank == 'week' ? 'active' : ''}" onclick="filterMovies('rank', 'week')">本周排行</button>
+                <button th:classappend="${rank == 'month' ? 'active' : ''}" onclick="filterMovies('rank', 'month')">本月排行</button>
+                <button th:classappend="${rank == 'rating' ? 'active' : ''}" onclick="filterMovies('rank', 'rating')">好评排行</button>
             </div>
-        </section>
-    </main>
+        </div>
+    </section>
+    <h2>电影列表</h2>
+    <section class="movie-list">
+        <div th:each="movie : ${movies}" class="movie" th:onclick="'location.href=\'/movieView?movieId=' + ${movie.movieId} + '\';'">
+            <img th:src="'/image/' + ${movie.image}" th:alt="${movie.name}">
+            <h2 th:text="${movie.name}">Movie Name</h2>
+            <p th:text="'类型: ' + ${movie.genre}">Genre</p>
+            <p th:text="'地区: ' + ${movie.region}">Region</p>
+            <div class="clear"></div>
+        </div>
+    </section>
+</main>
+
 
 
 <div class="pagination">

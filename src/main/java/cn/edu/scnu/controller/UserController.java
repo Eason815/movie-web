@@ -36,8 +36,9 @@ public class UserController {
         return "redirect:/index";
     }
     @RequestMapping("/toRegisterPage")
-    public String toRegisterPage(Model model){
+    public String toRegisterPage(Model model, String returnUrl){
         model.addAttribute("currentYear" , Calendar.getInstance().get(Calendar.YEAR));
+        model.addAttribute("returnUrl", returnUrl);
         return "register";
     }
 

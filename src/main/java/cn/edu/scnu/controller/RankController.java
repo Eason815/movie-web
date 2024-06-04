@@ -30,7 +30,7 @@ public class RankController {
         List<Movie> movies = null;
 
 
-        Integer pageSize=15;//每页显示的记录数
+        Integer pageSize=18;//每页显示的记录数
         if(pageNo==null) pageNo=1;
         Integer pageCount = 0;
 
@@ -62,6 +62,8 @@ public class RankController {
         model.addAttribute("PageCount", pageCount);
         model.addAttribute("movies", pageMovies);
         model.addAttribute("httpServletRequest", request);
+
+
         return "rank";
     }
 

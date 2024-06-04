@@ -31,7 +31,7 @@
     </script>
 </head>
 <body class="text-center">
-<div id="returnUrl" th:attr="data-return-url=${returnUrl}">返回</div>
+<div id="returnUrl" th:attr="data-return-url=${returnUrl}" onclick="window.location.href=this.getAttribute('data-return-url')">返回</div>
 
 <!--  用户登录form表单 -->
 <div class="form-signin">
