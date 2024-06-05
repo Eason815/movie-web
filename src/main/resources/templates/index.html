@@ -24,8 +24,9 @@
         <a id="vip-tag" style="display: none;">VIP</a>
         <a id="noVip-tag" style="display: none;">普通</a>
         <div th:if="${session.user}">
+            <span style="margin-left: 50px;margin-right: 50px; color: white" th:text="'欢迎:   '+${session.user.getUsername()} "></span>
             <span id="head_span1">
-                <a th:href="@{/toLogOut(returnUrl=${httpServletRequest.requestURI + (httpServletRequest.queryString != null ? '?' + httpServletRequest.queryString : '')})}">退出</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+                 <a th:href="@{/toLogOut(returnUrl=${httpServletRequest.requestURI + (httpServletRequest.queryString != null ? '?' + httpServletRequest.queryString : '')})}">退出</a>&nbsp;&nbsp;|&nbsp;&nbsp;
             </span>
         </div>
 
