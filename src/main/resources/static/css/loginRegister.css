@@ -1,0 +1,97 @@
+body {
+    font-family: Arial, sans-serif;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    height: 100vh;
+    margin: 0;
+}
+
+.form-signin {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 30px;
+    border-radius: 10px;
+    width: 100%;
+    height: 75%;
+    max-width: 400px;
+    margin-left: 10%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+.form-signin img {
+
+    margin: 20px 0;
+}
+
+.form-signin h1 {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.form-signin .form-control {
+
+    padding: 10px;
+    font-size: 16px;
+    width: 70%;
+    margin: 20px 40px;
+}
+
+.form-signin .checkbox {
+    width: 75%;
+    margin: 20px 40px;
+}
+
+.form-signin button {
+    padding: 10px;
+    font-size: 18px;
+    width: 75%;
+    margin: 20px 40px;
+}
+
+.form-signin p {
+    margin: 20px 20px 0;
+    width: 75%;
+    text-align: center;
+}
+
+.form-signin a {
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-top: 10px;
+    display: inline-block;
+}
+
+#returnUrl {
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+
+#btn {
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .form-signin {
+        margin-left: 5%;
+        max-width: 90%;
+    }
+}

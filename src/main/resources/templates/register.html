@@ -4,8 +4,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1,shrink-to-fit=no">
     <title>用户登录界面</title>
-    <link th:href="@{/login/css/bootstrap.min.css}" rel="stylesheet">
-    <link th:href="@{/login/css/signin.css}" rel="stylesheet">
+    <link rel="stylesheet" href="/css/loginRegister.css">
     <script src="js/jquery-3.4.1.js"></script>
     <script>
         $(function(){
@@ -28,25 +27,27 @@
 
     </script>
 </head>
-<body class="text-center">
+<body class="text-center" style="background-image: url('/images/background.png');">
 
 
-<div id="returnUrl" th:attr="data-return-url=${returnUrl}" onclick="window.location.href=this.getAttribute('data-return-url')">返回</div>
 
 <!--  用户注册form表单 -->
-<form class="form-signin">
-    <img class="mb-4" th:src="@{/login/img/login.jpg}" width="72" height="72">
+<div class="form-signin">
+    <div id="returnUrl" th:attr="data-return-url=${returnUrl}" onclick="window.location.href=this.getAttribute('data-return-url')">返回</div>
+<!--    <img class="mb-4" th:src="@{/login/img/login.jpg}" width="72" height="72">-->
     <h1 class="h3 mb-3 font-weight-normal">请注册</h1>
-    <input type="text" class="form-control"
+    <input type="text" class="form-control" placeholder="用户名"
            name="username" required="" autofocus="">
-    <input type="password" class="form-control"
+    <input type="password" class="form-control" placeholder="密码"
            name="password"  required="">
-    <input type="password" class="form-control"
+    <input type="password" class="form-control" placeholder="确认密码"
            name="password2"  required="">
 
-    <button class="btn btn-lg btn-primary btn-block" type="submit">注册</button>
-    <p class="mt-5 mb-3 text-muted">© <span th:text="${currentYear}">2018</span>-<span th:text="${currentYear}+1">2019</span></p>
-</form>
+    <button id="btn" type="submit">注册</button>
+
+        <p class="mt-5 mb-3 text-muted">© <span th:text="${currentYear}">2018</span>-<span th:text="${currentYear}+1">2019</span>
+
+</div>
 
 
 
