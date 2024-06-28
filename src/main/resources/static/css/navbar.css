@@ -1,3 +1,5 @@
+
+
 body {
     font-family: Arial, sans-serif;
     background-color: #f4f4f4;
@@ -11,7 +13,7 @@ body {
     justify-content: space-around;
     background-color: #333;
     padding: 10px;
-    height: 28px;
+    height: 24px;
 }
 .navbar a {
     width: 100px;
@@ -36,7 +38,10 @@ body {
 .right-links a {
     width: 50px;
     color: white;
-    padding: 14px 20px;
+    padding-top: 13px;
+    padding-bottom: 11px;
+    padding-left: 30px;
+    padding-right: 30px;
     text-decoration: none;
     text-align: center;
 }
@@ -60,10 +65,4 @@ body {
     box-shadow: 0 0 10px rgba(131, 115, 115, 0.5);
     text-align: center;
     font-weight: bold;
-}
-
-#welcome-message {
-    font-size: 20px;
-    color: blue;
-    text-align: center;
 }

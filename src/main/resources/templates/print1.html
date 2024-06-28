@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download Movie Likes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: #f0f0f0;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .container h1 {
+            color: #333;
+        }
+
+        .container p {
+            color: #666;
+            margin: 10px 0 20px;
+        }
+
+        button {
+            background-color: #4CAF50; /* Green */
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            transition-duration: 0.4s;
+            cursor: pointer;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        button:hover {
+            background-color: white;
+            color: black;
+            border: 2px solid #4CAF50;
+        }
+
+        #returnUrl {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            background-color: #007BFF;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-decoration: none;
+            margin-top: 20px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        #returnUrl:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>POI报表技术，生成EXCEL报表</h1>
+    <p>点击以下载电影点赞记录或播放榜单</p>
+
+    <button id="downloadButton1">下载电影点赞记录</button>
+    <br><br>
+    <button id="downloadButton2">下载电影播放榜单</button>
+    <br><br>
+
+    <div id="returnUrl" th:attr="data-return-url=${returnUrl}" onclick="window.location.href=(this.getAttribute('data-return-url') ? this.getAttribute('data-return-url') : '/index')">返回</div>
+</div>
+
+<script>
+    document.getElementById('downloadButton1').addEventListener('click', function() {
+        var currentUrl = window.location.href;
+        var iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+        iframe.src = '/downloadMovieLikes?returnUrl=' + encodeURIComponent(currentUrl);
+        document.body.appendChild(iframe);
+        iframe.onload = function() {
+            window.location.href = currentUrl;
+        };
+    });
+
+    document.getElementById('downloadButton2').addEventListener('click', function() {
+        var currentUrl = window.location.href;
+        var iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+        iframe.src = '/downloadMovieViews?returnUrl=' + encodeURIComponent(currentUrl);
+        document.body.appendChild(iframe);
+        iframe.onload = function() {
+            window.location.href = currentUrl;
+        };
+    });
+</script>
+</body>
+</html>

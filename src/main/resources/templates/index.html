@@ -2,15 +2,143 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Man8OutMovie</title>
+    <link rel="stylesheet" href="css/navbar.css">
     <meta http-equiv="Content-type" content="text/html; charset=UTF-8" />
-    <script src="/js/echarts.min.js"></script>
-    <script src="/js/VipLabel.js"></script>
-    <link rel="stylesheet" href="/css/navbar.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
     <style>
+
+        /* 轮播图部分 */
+
+        .carousel {
+            position: relative;
+            width: 100%;
+            max-width: 1000px;
+            margin: 20px auto;
+            overflow: hidden;
+            border-radius: 10px;
+        }
+
+        .slides {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .slide {
+            min-width: 100%;
+            height: 500px;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .carousel-controls {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            transform: translateY(-50%);
+        }
+
+        .carousel-controls span {
+            cursor: pointer;
+            font-size: 2rem;
+            color: white;
+            width: 60px;
+            height: 50px;
+            padding-top: 7px;
+            padding-bottom: 3px;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 50%;
+            user-select: none;
+
+        }
+
+        .content {
+            width: 100%;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+
+        .recommendations, .upcoming {
+            margin-bottom: 40px;
+        }
+
+        .movie-cards {
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .movie-card {
+            background: white;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 30%;
+        }
+
+        .movie-card img {
+            width: 100%;
+            border-radius: 10px;
+        }
 
     </style>
 
+<!--    <script src="/js/jquery-3.4.1.js"></script>-->
+<!--    <script src="/js/echarts.min.js"></script>-->
+<!--    <script src="/js/VipLabel.js"></script>-->
+    <script>
+        var currentSlide = 0;
+        function showSlide(index) {
+            var slides = document.getElementsByClassName('slide');
+            for (var i = 0; i < slides.length; i++) {
+                slides[i].style.display = 'none';
+            }
+            slides[index].style.display = 'block';
+        }
 
+        function changeSlide(n) {
+            currentSlide += n;
+            var slides = document.getElementsByClassName('slide');
+            if (currentSlide >= slides.length) {
+                currentSlide = 0;
+            }
+            if (currentSlide < 0) {
+                currentSlide = slides.length - 1;
+            }
+            showSlide(currentSlide);
+        }
+
+        window.onload = function() {
+            showSlide(currentSlide);
+            setInterval(function() {
+                changeSlide(1);
+            }, 3000);
+
+            function checkMembership() {
+                fetch('/checkMembership', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (!data.isVip) {
+                            document.getElementById('noVip-tag').style.display = 'block';
+                        }
+                        else{
+                            document.getElementById('vip-tag').style.display = 'block';
+                        }
+                    });
+            }
+
+            checkMembership();
+        };
+    </script>
 </head>
 <body>
 <div class="navbar">
@@ -18,30 +146,79 @@
         <a th:href="@{/index}">主页</a>
         <a th:href="@{/rank}">电影</a>
         <a th:href="@{/search}">搜索</a>
-        <div>统计</div>
+        <a th:href="@{/movieLikes(returnUrl=${httpServletRequest.requestURI + (httpServletRequest.queryString != null ? '?' + httpServletRequest.queryString : '')})}">报表</a>
+
     </div>
-
     <div class="right-links">
-
         <a id="vip-tag" style="display: none;">VIP</a>
         <a id="noVip-tag" style="display: none;">普通</a>
         <div th:if="${session.user}">
-            <span style="margin-left: 50px;margin-right: 50px; color: white" th:text="'欢迎:   '+${session.user.getUsername()} "></span>
-            <span id="head_span1">
-                 <a th:href="@{/toLogOut(returnUrl=${httpServletRequest.requestURI + (httpServletRequest.queryString != null ? '?' + httpServletRequest.queryString : '')})}">退出</a>&nbsp;&nbsp;|&nbsp;&nbsp;
-            </span>
+                <span id="head_span1">
+                    <a th:href="@{/toLogOut(returnUrl=${httpServletRequest.requestURI + (httpServletRequest.queryString != null ? '?' + httpServletRequest.queryString : '')})}">退出</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+                </span>
         </div>
-
         <div th:unless="${session.user}">
-            <span id="head_span2">
-                <a th:href="@{/toLoginPage(returnUrl=${httpServletRequest.requestURI + (httpServletRequest.queryString != null ? '?' + httpServletRequest.queryString : '')})}">登录</a>&nbsp;&nbsp;|&nbsp;&nbsp;
-                <a th:href="@{/toRegisterPage(returnUrl=${httpServletRequest.requestURI + (httpServletRequest.queryString != null ? '?' + httpServletRequest.queryString : '')})}">注册</a>&nbsp;&nbsp;|&nbsp;&nbsp;
-            </span>
+                <span id="head_span2">
+                    <a th:href="@{/toLoginPage(returnUrl=${httpServletRequest.requestURI + (httpServletRequest.queryString != null ? '?' + httpServletRequest.queryString : '')})}">登录</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+                    <a th:href="@{/toRegisterPage(returnUrl=${httpServletRequest.requestURI + (httpServletRequest.queryString != null ? '?' + httpServletRequest.queryString : '')})}">注册</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+                </span>
         </div>
     </div>
 </div>
 
+<div class="carousel">
+    <!-- 轮播图部分 -->
+    <div class="slides">
+        <div class="slide" style="background-image: url('/images/21.jpg');"></div>
+        <div class="slide" style="background-image: url('/images/22.jpg');"></div>
+        <div class="slide" style="background-image: url('/images/13.jpg');"></div>
+        <div class="slide" style="background-image: url('/images/17.jpg');"></div>
+    </div>
+    <div class="carousel-controls">
+        <span class="prev" onclick="changeSlide(-1)">&#10094;</span>
+        <span class="next" onclick="changeSlide(1)">&#10095;</span>
+    </div>
+</div>
 
+<div class="content">
+    <section class="recommendations">
+        <h2>热门推荐</h2>
+        <div class="movie-cards">
+            <!-- 热门推荐电影卡片 -->
+            <div class="movie-card">
+                <img src="/image/1.webp" alt="Movie 1">
+                <p>Movie 1</p>
+            </div>
+            <div class="movie-card">
+                <img src="/image/2.webp" alt="Movie 2">
+                <p>Movie 2</p>
+            </div>
+            <div class="movie-card">
+                <img src="/image/3.webp" alt="Movie 3">
+                <p>Movie 3</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="upcoming">
+        <h2>即将上映</h2>
+        <div class="movie-cards">
+            <!-- 即将上映电影卡片 -->
+            <div class="movie-card">
+                <img src="/images/23.jpg" alt="热辣滚烫">
+                <p>Upcoming 1</p>
+            </div>
+            <div class="movie-card">
+                <img src="/images/24.jpg" alt="飞驰人生2">
+                <p>Upcoming 2</p>
+            </div>
+            <div class="movie-card">
+                <img src="/images/25.jpg" alt="周处除三害">
+                <p>Upcoming 3</p>
+            </div>
+        </div>
+    </section>
+</div>
 
 
 </body>

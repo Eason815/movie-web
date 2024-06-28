@@ -98,4 +98,11 @@ public class MovieService extends ServiceImpl<MovieMapper, Movie> {
         queryWrapper.orderByAsc("RAND()");
         return movieMapper.selectList(queryWrapper);
     }
+
+    public List<Movie> getAllMoviesByID() {
+        // 获取所有电影后 随机排序
+        QueryWrapper<Movie> queryWrapper = new QueryWrapper<>();
+        queryWrapper.orderByAsc("movie_id");
+        return movieMapper.selectList(queryWrapper);
+    }
 }
