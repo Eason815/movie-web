@@ -146,7 +146,9 @@
         <a th:href="@{/index}">主页</a>
         <a th:href="@{/rank}">电影</a>
         <a th:href="@{/search}">搜索</a>
-        <a th:href="@{/movieLikes(returnUrl=${httpServletRequest.requestURI + (httpServletRequest.queryString != null ? '?' + httpServletRequest.queryString : '')})}">报表</a>
+        <a th:href="@{/print1}">报表</a>
+        <a th:href="@{/print2}">统计</a>
+        <a th:href="@{/pay}">支付</a>
 
     </div>
     <div class="right-links">

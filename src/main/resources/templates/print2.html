@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Download Movie Likes</title>
+    <title>Movie Echarts Reports</title>
     <style>
         /*body {*/
         /*    font-family: Arial, sans-serif;*/
@@ -89,6 +89,7 @@
         <a th:href="@{/print1}">报表</a>
         <a th:href="@{/print2}">统计</a>
 
+
     </div>
 
     <div class="right-links">
@@ -117,38 +118,21 @@
     <h1>POI报表技术，生成EXCEL报表</h1>
     <p>点击以下载电影点赞记录或播放榜单</p>
 
-    <button id="downloadButton1">下载电影点赞记录</button>
+    <button id="downloadButton1">好评统计图表</button>
     <br><br>
-    <button id="downloadButton2">下载电影播放榜单</button>
+    <button id="downloadButton2">电影类型图表</button>
     <br><br>
 
-<!--    <div id="returnUrl" th:attr="data-return-url=${returnUrl}" onclick="window.location.href=(this.getAttribute('data-return-url') ? this.getAttribute('data-return-url') : '/index')">返回</div>-->
+    <!--    <div id="returnUrl" th:attr="data-return-url=${returnUrl}" onclick="window.location.href=(this.getAttribute('data-return-url') ? this.getAttribute('data-return-url') : '/index')">返回</div>-->
 </div>
 
 <script>
     document.getElementById('downloadButton1').addEventListener('click', function() {
-        // var currentUrl = window.location.href;
-        // var iframe = document.createElement('iframe');
-        // iframe.style.display = 'none';
-        // iframe.src = '/downloadMovieLikes?returnUrl=' + encodeURIComponent(currentUrl);
-        // document.body.appendChild(iframe);
-        // iframe.onload = function() {
-        //     window.location.href = currentUrl;
-        // };
-        window.location.href = '/downloadMovieLikes';
-
+        window.location.href = '/echarts1';
     });
 
     document.getElementById('downloadButton2').addEventListener('click', function() {
-        // var currentUrl = window.location.href;
-        // var iframe = document.createElement('iframe');
-        // iframe.style.display = 'none';
-        // iframe.src = '/downloadMovieViews?returnUrl=' + encodeURIComponent(currentUrl);
-        // document.body.appendChild(iframe);
-        // iframe.onload = function() {
-        //     window.location.href = currentUrl;
-        // };
-        window.location.href = '/downloadMovieViews';
+        window.location.href = '/echarts2';
     });
 </script>
 </body>

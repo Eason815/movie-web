@@ -7,9 +7,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ListResourceBundle;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -104,5 +102,23 @@ public class MovieService extends ServiceImpl<MovieMapper, Movie> {
         QueryWrapper<Movie> queryWrapper = new QueryWrapper<>();
         queryWrapper.orderByAsc("movie_id");
         return movieMapper.selectList(queryWrapper);
+    }
+
+    public Map<String, Integer> getMovieCountByGenre() {
+        QueryWrapper<Movie> queryWrapper = new QueryWrapper<>();
+        queryWrapper.select("genre, count(*) as count").groupBy("genre");
+
+        List<Map<String, Object>> resultList = movieMapper.selectMaps(queryWrapper);
+
+        Map<String, Integer> typeCountMap = new HashMap<>();
+        for (Map<String, Object> result : resultList) {
+            String name = (String) result.get("genre");
+            if (name == null || name.isEmpty() || name.equals(" "))  continue;
+            Integer value = ((Long) result.get("count")).intValue();
+            typeCountMap.put(name, value);
+        }
+
+        //System.out.println(typeCountMap);
+        return typeCountMap;
     }
 }

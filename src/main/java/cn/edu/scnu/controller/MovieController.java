@@ -50,7 +50,7 @@ public class MovieController {
 
     @GetMapping("/movieLikesChart")
     public String movieLikesChart() {
-        return "movieLikes";
+        return "echarts1";
     }
 
     @GetMapping("/movieViewChart")

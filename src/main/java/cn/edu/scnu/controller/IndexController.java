@@ -25,7 +25,10 @@ public class IndexController {
         return "index";
     }
 
-
+    @RequestMapping("/pay")
+    public String toPayPage(HttpServletRequest request, Model model){
+        return "pay";
+    }
 
 
 

@@ -1,17 +1,55 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Movie Likes Chart</title>
-    <script src="js/echarts.min.js"></script>
+    <script src="/js/echarts.min.js"></script>
     <style>
         #main {
             margin:auto
         }
     </style>
+
+    <link rel="stylesheet" href="/css/navbar.css">
+
 </head>
 <body>
+
+<div class="navbar">
+    <div class="left-links">
+        <a th:href="@{/index}">主页</a>
+        <a th:href="@{/rank}">电影</a>
+        <a th:href="@{/search}">搜索</a>
+        <a th:href="@{/print1}">报表</a>
+        <a th:href="@{/print2}">统计</a>
+
+    </div>
+
+    <div class="right-links">
+
+        <a id="vip-tag" style="display: none;">VIP</a>
+        <a id="noVip-tag" style="display: none;">普通</a>
+        <div th:if="${session.user}">
+            <span style="margin-left: 50px;margin-right: 50px; color: white" th:text="'欢迎:   '+${session.user.getUsername()} "></span>
+            <span id="head_span1">
+                 <a th:href="@{/toLogOut(returnUrl=${httpServletRequest.requestURI + (httpServletRequest.queryString != null ? '?' + httpServletRequest.queryString : '')})}">退出</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+            </span>
+        </div>
+
+        <div th:unless="${session.user}">
+            <span id="head_span2">
+                <a th:href="@{/toLoginPage(returnUrl=${httpServletRequest.requestURI + (httpServletRequest.queryString != null ? '?' + httpServletRequest.queryString : '')})}">登录</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+                <a th:href="@{/toRegisterPage(returnUrl=${httpServletRequest.requestURI + (httpServletRequest.queryString != null ? '?' + httpServletRequest.queryString : '')})}">注册</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+            </span>
+        </div>
+    </div>
+</div>
+
+
+
+
+
 
 <div id="main" style="width: 1200px; height: 800px;"></div>
 
@@ -120,6 +158,32 @@
     }
 
     fetchData();
+    // window.onload = function() {
+
+    function checkMembership() {
+        fetch('/checkMembership', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (!data.isVip) {
+                    document.getElementById('noVip-tag').style.display = 'block';
+                }
+                else{
+                    document.getElementById('vip-tag').style.display = 'block';
+                }
+            });
+    }
+
+    checkMembership();
+
+    // };
+
+
+
 </script>
 </body>
 </html>

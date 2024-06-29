@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Likes Chart</title>
+    <script src="/js/echarts.min.js"></script>
+    <style>
+        #main {
+            margin:auto
+        }
+    </style>
+
+    <link rel="stylesheet" href="/css/navbar.css">
+</head>
+<body>
+
+<div class="navbar">
+    <div class="left-links">
+        <a th:href="@{/index}">主页</a>
+        <a th:href="@{/rank}">电影</a>
+        <a th:href="@{/search}">搜索</a>
+        <a th:href="@{/print1}">报表</a>
+        <a th:href="@{/print2}">统计</a>
+
+    </div>
+
+    <div class="right-links">
+
+        <a id="vip-tag" style="display: none;">VIP</a>
+        <a id="noVip-tag" style="display: none;">普通</a>
+        <div th:if="${session.user}">
+            <span style="margin-left: 50px;margin-right: 50px; color: white" th:text="'欢迎:   '+${session.user.getUsername()} "></span>
+            <span id="head_span1">
+                 <a th:href="@{/toLogOut(returnUrl=${httpServletRequest.requestURI + (httpServletRequest.queryString != null ? '?' + httpServletRequest.queryString : '')})}">退出</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+            </span>
+        </div>
+
+        <div th:unless="${session.user}">
+            <span id="head_span2">
+                <a th:href="@{/toLoginPage(returnUrl=${httpServletRequest.requestURI + (httpServletRequest.queryString != null ? '?' + httpServletRequest.queryString : '')})}">登录</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+                <a th:href="@{/toRegisterPage(returnUrl=${httpServletRequest.requestURI + (httpServletRequest.queryString != null ? '?' + httpServletRequest.queryString : '')})}">注册</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+            </span>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+<div id="main" style="width: 1200px; height: 800px;"></div>
+<a id="genreCount" th:attr="data-genre-count=${genreCount}" style="display: none;"></a>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // 获取隐藏元素中的数据
+        var genreCountData = document.getElementById('genreCount').getAttribute('data-genre-count');
+
+        // 确保数据存在并且是有效的JSON
+        if (genreCountData) {
+            try {
+                // 将JSON字符串转换为对象
+                var data1 = JSON.parse(genreCountData);
+
+                // 将数据转换为ECharts所需的格式
+                var chartData = Object.keys(data1).map(function(key) {
+                    return { name: key, value: data1[key] };
+                });
+
+                // 初始化图表
+                var chartDom = document.getElementById('main');
+                var myChart = echarts.init(chartDom);
+                var option;
+
+                // 配置图表选项
+                option = {
+                    tooltip: {
+                        trigger: 'item'
+                    },
+                    legend: {
+                        top: '5%',
+                        left: 'center'
+                    },
+                    series: [
+                        {
+                            name: 'Access From',
+                            type: 'pie',
+                            radius: ['40%', '80%'],
+                            avoidLabelOverlap: false,
+                            padAngle: 5,
+                            itemStyle: {
+                                borderRadius: 10
+                            },
+                            label: {
+                                show: false,
+                                position: 'center'
+                            },
+                            emphasis: {
+                                label: {
+                                    show: true,
+                                    fontSize: 40,
+                                    fontWeight: 'bold'
+                                }
+                            },
+                            labelLine: {
+                                show: false
+                            },
+                            data: chartData
+                        }
+                    ]
+                };
+
+                // 使用配置项生成图表
+                myChart.setOption(option);
+            } catch (e) {
+                console.error("Invalid JSON data:", e);
+            }
+        } else {
+            console.error("No data found in 'data-genre-count' attribute.");
+        }
+    });
+
+
+    function checkMembership() {
+        fetch('/checkMembership', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (!data.isVip) {
+                    document.getElementById('noVip-tag').style.display = 'block';
+                }
+                else{
+                    document.getElementById('vip-tag').style.display = 'block';
+                }
+            });
+    }
+
+    checkMembership();
+</script>
+
+
+</body>
+</html>
