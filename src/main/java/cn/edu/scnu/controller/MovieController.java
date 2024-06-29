@@ -48,6 +48,7 @@ public class MovieController {
         return ResponseEntity.ok(response);
     }
 
+
     @GetMapping("/movieLikesChart")
     public String movieLikesChart() {
         return "echarts1";
@@ -94,8 +95,10 @@ public class MovieController {
 
 
         TbUser user = (TbUser) session.getAttribute("user");
-
         model.addAttribute("user", user);
+
+        boolean needVip = movie.isNeedVip();
+        model.addAttribute("needVip", needVip);
         return "movieView";
     }
 }

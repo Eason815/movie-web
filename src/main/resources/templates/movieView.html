@@ -87,6 +87,8 @@
     </style>
     <script>
         window.onload = function() {
+            const needVip = document.getElementById('needVip').getAttribute('needed-vip');
+
             const video = document.getElementById('movie-video');
             const overlay = document.getElementById('overlay');
 
@@ -103,12 +105,14 @@
                         if (!data.isVip) {
                             document.getElementById('noVip-tag').style.display = 'block';
 
-                            video.addEventListener('timeupdate', () => {
-                                if (video.currentTime >= 10) {
-                                    video.pause();
-                                    overlay.style.display = 'flex';
-                                }
-                            });
+                            if (needVip === 'true') {
+                                video.addEventListener('timeupdate', () => {
+                                    if (video.currentTime >= 3) {
+                                        video.pause();
+                                        overlay.style.display = 'flex';
+                                    }
+                                });
+                            }
                         }
                         else{
                             document.getElementById('vip-tag').style.display = 'block';
@@ -178,6 +182,7 @@
                 </span>
             </p>
             <p><strong>简介：</strong><span th:text="${movie.introduce}"></span></p>
+            <p><strong>会员专属：</strong><span th:text="${needVip}"></span></p>
         </div>
     </div>
 
@@ -186,6 +191,6 @@
 
 </div>
 
-
+<a id="needVip" th:attr="needed-vip=${needVip}" style="display: none;"></a>
 </body>
 </html>

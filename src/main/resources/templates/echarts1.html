@@ -9,6 +9,25 @@
         #main {
             margin:auto
         }
+
+        #show-final {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            background-color: #007BFF;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-decoration: none;
+            margin-top: 20px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        #show-final:hover {
+            background-color: #0056b3;
+        }
     </style>
 
     <link rel="stylesheet" href="/css/navbar.css">
@@ -52,6 +71,7 @@
 
 
 <div id="main" style="width: 1200px; height: 800px;"></div>
+<button id="show-final" style="margin-top: 20px;">直接显示结果</button>
 
 <script>
     var chartDom = document.getElementById('main');
@@ -156,6 +176,36 @@
             setTimeout(updateChart, 30);
         }
     }
+
+    function showFinalResult() {
+        while (currentIndex < allLikes.length) {
+            const like = allLikes[currentIndex];
+
+            if (movieLikes[like.movieId]) {
+                movieLikes[like.movieId]++;
+            } else {
+                movieLikes[like.movieId] = 1;
+                fetch('/getMovieById?id=' + like.movieId)
+                    .then(response => response.json())
+                    .then(data => {
+                        movieNames[like.movieId] = data.name.split(" ")[0];
+                    });
+            }
+
+            currentIndex++;
+        }
+
+        const sortedLikes = Object.entries(movieLikes).sort((a, b) => b[1] - a[1]).slice(0, 10);
+        const sortedNames = sortedLikes.map(item => movieNames[item[0]]);
+        const sortedData = sortedLikes.map(item => item[1]);
+
+        option.yAxis.data = sortedNames;
+        option.series[0].data = sortedData;
+        myChart.setOption(option);
+    }
+
+    document.getElementById('show-final').addEventListener('click', showFinalResult);
+
 
     fetchData();
     // window.onload = function() {
