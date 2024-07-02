@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>订单</title>
+    <!-- 引入 Element UI 样式 -->
+    <style>
+        .nav-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        .nav-button {
+            margin: 0 10px;
+            padding: 10px 20px;
+            background-color: #409EFF;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .nav-button:hover {
+            background-color: #66b1ff;
+        }
+        .nav-button.active {
+            background-color: #1E90FF;
+            font-weight: bold;
+        }
+    </style>
+    <link rel="stylesheet" href="/css/index2.css">
+    <link rel="stylesheet" href="/css/navbar.css">
+    <script src="/js/VipLabel.js"></script>
+</head>
+<body>
+
+
+<div class="navbar">
+    <div class="left-links">
+        <a th:href="@{/index}">主页</a>
+        <a th:href="@{/rank}">电影</a>
+        <a th:href="@{/search}">搜索</a>
+        <a th:href="@{/print1}">报表</a>
+        <a th:href="@{/print2}">统计</a>
+        <a th:href="@{/PayView}">支付</a>
+
+    </div>
+    <div class="right-links">
+        <a id="vip-tag" style="display: none;">VIP</a>
+        <a id="noVip-tag" style="display: none;">普通</a>
+        <div th:if="${session.user}">
+                <span id="head_span1">
+                    <a th:href="@{/toLogOut(returnUrl=${httpServletRequest.requestURI + (httpServletRequest.queryString != null ? '?' + httpServletRequest.queryString : '')})}">退出</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+                </span>
+        </div>
+        <div th:unless="${session.user}">
+                <span id="head_span2">
+                    <a th:href="@{/toLoginPage(returnUrl=${httpServletRequest.requestURI + (httpServletRequest.queryString != null ? '?' + httpServletRequest.queryString : '')})}">登录</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+                    <a th:href="@{/toRegisterPage(returnUrl=${httpServletRequest.requestURI + (httpServletRequest.queryString != null ? '?' + httpServletRequest.queryString : '')})}">注册</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+                </span>
+        </div>
+    </div>
+</div>
+
+
+<div class="nav-container">
+    <a href="/PayView" class="nav-button">商品</a>
+    <a href="/OrdersView" class="nav-button">订单</a>
+</div>
+
+<div id="app" style="padding: 10px">
+    <el-table stripe :data="tableData">
+        <el-table-column label="id" prop="id"></el-table-column>
+        <el-table-column label="订单名称" prop="name"></el-table-column>
+        <el-table-column label="订单编号" prop="orderId"></el-table-column>
+        <el-table-column label="支付宝订单号" prop="alipayNo"></el-table-column>
+        <el-table-column label="总价格" prop="total"></el-table-column>
+        <el-table-column label="创建时间" prop="createTime"></el-table-column>
+        <el-table-column label="支付时间" prop="payTime"></el-table-column>
+        <el-table-column label="订单状态" prop="state"></el-table-column>
+        <el-table-column label="操作">
+            <template slot-scope="scope">
+                <el-button @click="pay(scope.row)" type="primary" size="small" :disabled="scope.row.state">支付</el-button>
+                <el-button @click="cancel(scope.row.id)" type="danger" size="small" :disabled="scope.row.state">取消</el-button>
+            </template>
+        </el-table-column>
+    </el-table>
+</div>
+
+<!-- 引入 Vue 和 Element UI -->
+<script src="/js/vue2.js"></script>
+<script src="/js/index1.js"></script>
+
+<script>
+    const baseUrl = "http://localhost:8099";
+    new Vue({
+        el: '#app',
+        data() {
+            return {
+                tableData: []
+            }
+        },
+        created() {
+            this.load()
+        },
+        methods: {
+            load() {
+                fetch(baseUrl + '/api/orders')
+                    .then(res => res.json())
+                    .then(res => {
+                        this.tableData = res;
+                    })
+            },
+            pay(row) {
+                window.open("http://localhost:8099/alipay/pay?subject=" + row.name + "&traceNo=" + row.orderId + "&totalAmount=" + row.total);
+                this.$message.success("请求支付宝成功");
+            },
+            cancel(orderId) {
+                fetch(baseUrl + '/api/cancelOrder?orderId=' + orderId, {
+                    method: 'POST'
+                }).then(res => res.json()).then(res => {
+                    if (res) {
+                        this.$message.success("取消订单成功");
+                        this.load();
+                    } else {
+                        this.$message.error("取消订单失败");
+                    }
+                });
+            }
+        }
+    });
+
+    // 导航栏高亮
+    document.addEventListener("DOMContentLoaded", function() {
+        const currentPath = window.location.pathname;
+        if (currentPath.includes("PayView")) {
+            document.getElementById("pay-view").classList.add("active");
+        } else if (currentPath.includes("OrdersView")) {
+            document.getElementById("orders-view").classList.add("active");
+        }
+    });
+</script>
+</body>
+</html>

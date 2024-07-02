@@ -1,4 +1,4 @@
-window.onload = function() {
+
     function checkMembership() {
         fetch('/checkMembership', {
             method: 'GET',
@@ -18,4 +18,3 @@ window.onload = function() {
     }
 
     checkMembership();
-};

@@ -37,13 +37,18 @@ public class MovieController {
 
     @GetMapping("/checkMembership")
     @ResponseBody
-    public ResponseEntity<Map<String, Boolean>> checkMembership(HttpSession session) {
+    public ResponseEntity<Map<String, Object>> checkMembership(HttpSession session) {
         TbUser user = (TbUser) session.getAttribute("user");
-        Map<String, Boolean> response = new HashMap<>();
-        if (user != null && user.getIsVip()==1) {
-            response.put("isVip", true);
-        } else {
+        Map<String, Object> response = new HashMap<>();
+        if (user == null) {
+            response.put("userStatus", 0);
             response.put("isVip", false);
+        } else if (user.getIsVip() == 0) {
+            response.put("userStatus", 1);
+            response.put("isVip", false);
+        } else {
+            response.put("userStatus", 2);
+            response.put("isVip", true);
         }
         return ResponseEntity.ok(response);
     }

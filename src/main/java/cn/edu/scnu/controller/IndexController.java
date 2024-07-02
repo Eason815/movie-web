@@ -25,11 +25,19 @@ public class IndexController {
         return "index";
     }
 
-    @RequestMapping("/pay")
-    public String toPayPage(HttpServletRequest request, Model model){
-        return "pay";
+    @RequestMapping("/OrdersView")
+    public String OrdersView(HttpServletRequest request, Model model){
+
+        model.addAttribute("httpServletRequest", request);
+        return "OrdersView";
     }
 
+    @RequestMapping("/PayView")
+    public String PayView(HttpServletRequest request, Model model){
+
+        model.addAttribute("httpServletRequest", request);
+        return "PayView";
+    }
 
 
 }
