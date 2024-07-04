@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home View</title>
+    <title>商品</title>
     <!-- 引入 Element UI 样式 -->
     <style>
         .nav-container {
@@ -113,7 +113,7 @@
                         this.tableData = res;
                     })
             },
-            buy(goodsId) {
+            buy: function(goodsId) {
                 fetch(baseUrl + '/api/buy?goodsId=' + goodsId, {
                     headers: {
                         'Content-Type': 'application/json;charset=utf-8'
@@ -121,12 +121,34 @@
                     method: 'POST'
                 }).then(res => res.json()).then(res => {
                     if (res) {
-                        this.$message.success("下单成功");
-                        this.load();
+                        if (goodsId === 1 || goodsId === 2) {
+                            fetch('/checkMembership', {
+                                method: 'GET',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                }
+                            }).then(response => response.json()).then(data => {
+                                if (data.userStatus === 0) {
+                                    this.$message.error("请先登录");
+                                } else if (data.userStatus === 2 && goodsId === 1) {
+                                    this.$message.info("你已经是会员VIP了");
+                                } else {
+                                    this.$message.success("下单成功");
+                                    this.load();
+                                 }
+                            }).catch(err => {
+                                this.$message.error("检查用户状态失败");
+                            });
+                        } else {
+                            this.$message.success("下单成功");
+                            this.load();
+                        }
                     } else {
                         this.$message.error("下单失败");
                     }
-                })
+                }).catch(err => {
+                    this.$message.error("购买请求失败");
+                });
             }
         }
     });

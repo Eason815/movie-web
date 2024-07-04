@@ -22,5 +22,6 @@ public class Orders {
     private Date payTime;
     private String state;
     private BigDecimal total;
+    private Integer userId;
 }
 

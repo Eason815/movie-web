@@ -2,6 +2,7 @@ package cn.edu.scnu.service;
 
 import cn.edu.scnu.entity.Orders;
 import cn.edu.scnu.dao.OrdersMapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,5 +20,11 @@ public class OrdersService {
                 .set("pay_time", payTime)
                 .set("alipay_no", alipayNo);
         ordersMapper.update(null, updateWrapper);
+    }
+
+    public Orders findOrderByOrderId(String outTradeNo) {
+        QueryWrapper<Orders> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("order_id", outTradeNo);  // 假设订单号的字段名是 order_id
+        return ordersMapper.selectOne(queryWrapper);
     }
 }

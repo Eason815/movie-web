@@ -4,7 +4,9 @@ import cn.edu.scnu.entity.Goods;
 import cn.edu.scnu.entity.Orders;
 import cn.edu.scnu.dao.GoodsMapper;
 import cn.edu.scnu.dao.OrdersMapper;
+import cn.edu.scnu.entity.TbUser;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpSession;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -39,7 +41,14 @@ public class ApiController {
 
     @Transactional
     @PostMapping("/buy")
-    public boolean buy(@RequestParam Integer goodsId) {
+    public boolean buy(@RequestParam Integer goodsId, HttpSession session) throws Exception {
+
+        // 获取当前用户信息
+        TbUser user = (TbUser) session.getAttribute("user");
+        if (user == null) {
+            throw new Exception("用户未登录");
+        }
+
         Goods goods = goodsMapper.selectById(goodsId);
         int store = goods.getStore() - 1;
         if (store < 0) {
@@ -52,6 +61,7 @@ public class ApiController {
         orders.setName("购买" + goods.getName() + "订单");
         orders.setOrderId(new SimpleDateFormat("yyyyMMdd").format(date) + System.currentTimeMillis());
         orders.setTotal(goods.getPrice().multiply(BigDecimal.ONE));
+        orders.setUserId(user.getUserId());
 
         goods.setStore(store);
         return ordersMapper.insert(orders) > 0 && goodsMapper.updateById(goods) > 0;

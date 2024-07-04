@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Movie Search</title>
+    <title>电影搜索</title>
 
     <style>
         h1 {
@@ -133,12 +133,12 @@
 
 
 <form action="/search" method="get">
-    <input type="text" name="name" placeholder="请输入：张国荣" th:value="${name}">
+    <input type="text" name="name" placeholder="例:(输入)张国荣" th:value="${name}">
     <button type="submit">Search</button>
 </form>
-<h1>Search Results</h1>
+<h1>搜索结果</h1>
 <div th:unless="${movies != null and movies.size() > 0}" style="text-align: center;">
-    <h2>No movies found.</h2>
+    <h2>无搜索结果</h2>
 </div>
 <div th:each="movie : ${movies}" class="movie">
     <img th:src="'/image/' + ${movie.image}" th:alt="${movie.name}">

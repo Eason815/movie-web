@@ -3,12 +3,12 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1,shrink-to-fit=no">
-    <title>用户登录界面</title>
+    <title>用户注册界面</title>
     <link rel="stylesheet" href="/css/loginRegister.css">
-    <script src="js/jquery-3.4.1.js"></script>
+    <script src="/js/jquery-3.4.1.js"></script>
     <script>
         $(function(){
-            $("form").submit(function() {
+            $("#btn").click(function(){
 
                 var username=$("input[name='username']").val();
                 var password=$("input[name='password']").val();
@@ -23,7 +23,7 @@
                });
                return false;
             });
-        })
+        });
 
     </script>
 </head>
